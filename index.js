@@ -203,7 +203,7 @@ module.exports.webpackConfig = function(env, configuration){
   const destination = path.resolve(process.cwd(), configuration.distFolder || defaults.distFolder);
   const plugins = module.exports.setupPlugins(environment, configuration.indexFile, configuration.icons);
   const version = JSON.stringify(environment.version);
-  const cssPipeline = module.exports.cssPipeline();
+  const cssPipeline = module.exports.cssPipeline(env);
 
   return {
     entry: configuration.entries,
