@@ -185,25 +185,25 @@ module.exports.setupDevServer = function(host, port, https){
   return config;
 };
 
-module.exports.webpackConfig = function(env, entries, distFolder, serviceWorkerEnabled, transpilers, externals){
+module.exports.webpackConfig = function(env, configuration){
   if(!env)
     env = "development";
 
-  const environment = module.exports.setupEnvironment(env, serviceWorkerEnabled);
-  const destination = path.resolve(process.cwd(), distFolder || defaults.distFolder);
-  const plugins = module.exports.setupPlugins(environment);
+  const environment = module.exports.setupEnvironment(env, configuration.serviceWorkerEnabled);
+  const destination = path.resolve(process.cwd(), configuration.distFolder || defaults.distFolder);
+  const plugins = module.exports.setupPlugins(environment, configuration.indexFile, configuration.icons);
   const version = JSON.stringify(environment.version);
   const cssPipeline = module.exports.cssPipeline();
 
   return {
-    entry: entries,
+    entry: configuration.entries,
     output: {filename: "[name]", path: destination, publicPath: "/"},
     module: {
-      rules: module.exports.setupRules(transpilers, cssPipeline, version)
+      rules: module.exports.setupRules(configuration.transpilers, cssPipeline, version)
     },
-    resolve: {extensions: module.exports.setupResolvers(transpilers)},
+    resolve: {extensions: module.exports.setupResolvers(configuration.transpilers)},
     plugins,
-    externals,
+    externals: configuration.externals,
     devServer: Object.assign(
       {
         contentBase: destination,
