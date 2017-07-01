@@ -33,7 +33,7 @@ const defaults = {
   icons: {
     svgPath: "src/css/font-awesome.svg"
   },
-  scss: {
+  sass: {
     includePaths: ["lazier.sass", "ribbon.css", "normalize.css"].map(l => `node_modules/${l}`)
   },
   devServer: {
@@ -80,6 +80,8 @@ module.exports.loadIcons = function(whitelist, svgPath, prefix = "icon"){
     icon.attr("id", tag);
     icon.find("title").remove();
 
+    if(!Array.isArray(whitelist))
+      whitelist = [whitelist];
     if(whitelist.includes(name)){
       const definition = icon.wrap("<div/>").parent().html().replace(/\n/mg, "").replace(/^\s+/mg, "");
       accu[name] = {tag, reference: `<svg class="${prefix} ${prefix}-${name} %s"><use xlink:href="#${tag}"></use></svg>`, definition};
@@ -119,9 +121,13 @@ module.exports.setupPlugins = function(environment, indexFile, icons){
   ];
 
   if(env === "production")
-    plugins.push(...[new BabiliPlugin({mangle: false})]); // PI: Remove mangle when Safari 10 is dropped: https://github.com/mishoo/UglifyJS2/issues/1753
-  else
-    plugins.push(...[new webpack.HotModuleReplacementPlugin(), new GraphBundleAnalyzerPlugin({openAnalyzer: false})]);
+    plugins.push(new BabiliPlugin({mangle: false})); // PI: Remove mangle when Safari 10 is dropped: https://github.com/mishoo/UglifyJS2/issues/1753
+  else{
+    plugins.push(new webpack.HotModuleReplacementPlugin());
+
+    if(path.basename(process.argv[1]) === "webpack-dev-server")
+      plugins.push(new GraphBundleAnalyzerPlugin({openAnalyzer: false}));
+  }
 
   return plugins;
 };
@@ -130,7 +136,7 @@ module.exports.setupRules = function(transpilers, cssPipeline, version){
   const rules = [
     {test: /\.scss$/, use: cssPipeline},
     {
-      test: /\.(?:png|jpg|svg|)$/,
+      test: /\.(?:png|jpg|svg)$/,
       use: [
         {
           loader: "file-loader",
@@ -158,10 +164,10 @@ module.exports.setupRules = function(transpilers, cssPipeline, version){
 };
 
 module.exports.setupResolvers = function(transpilers){
-  const extensions = [".json"];
+  const extensions = [".json", ".js"];
 
   if(transpilers.includes("babel"))
-    extensions.push(".js", ".jsx");
+    extensions.push(".jsx");
 
   if(transpilers.includes("typescript"))
     extensions.push(".ts", ".tsx");

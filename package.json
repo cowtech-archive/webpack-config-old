@@ -35,7 +35,6 @@
     "babili-webpack-plugin": "~0.1",
     "cheerio": "^1.0.0-rc.1",
     "css-loader": "~0.28",
-    "eslint": "~4.1",
     "file-loader": "~0.11",
     "html-webpack-exclude-assets-plugin": "~0.0",
     "html-webpack-plugin": "~2.29",
@@ -47,12 +46,10 @@
     "sass-loader": "~6.0",
     "string-replace-loader": "~1.2",
     "style-loader": "~0.18",
-    "tslint": "~5.4",
     "tslint-react": "~3.0",
     "typescript": "~2.4",
     "webpack": "~3.0",
-    "webpack-bundle-analyzer": "~2.8",
-    "webpack-dev-server": "~2.5"
+    "webpack-bundle-analyzer": "~2.8"
   },
   "devDependencies": {
   }
