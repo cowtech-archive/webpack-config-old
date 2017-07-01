@@ -56,9 +56,8 @@ module.exports.postcssPlugins = function(browsersWhiteList, selectorBlackList){
   ];
 };
 
-module.exports.cssPipeline = function(includePaths, browsersWhiteList, selectorBlackList){
-  return [
-    "style-loader",
+module.exports.cssPipeline = function(env, includePaths, browsersWhiteList, selectorBlackList){
+  const pipeline = [
     "css-loader",
     {loader: "postcss-loader", options: {plugins: () => module.exports.postcssPlugins(browsersWhiteList, selectorBlackList)}},
     {loader: "sass-loader", options: {
@@ -67,6 +66,11 @@ module.exports.cssPipeline = function(includePaths, browsersWhiteList, selectorB
       includePaths: defaults.sass.includePaths}
     }
   ];
+
+  if(env !== "production")
+    pipeline.unshift("style-loader");
+
+  return pipeline;
 };
 
 module.exports.loadIcons = function(whitelist, svgPath, prefix = "icon"){
