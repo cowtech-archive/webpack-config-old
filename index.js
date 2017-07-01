@@ -217,7 +217,7 @@ module.exports.webpackConfig = function(env, configuration){
         compress: true,
         hot: true
       },
-      module.exports.setupDevServer()
+      module.exports.setupDevServer(configuration.host, configuration.port, configuration.https)
     )
   };
 };
