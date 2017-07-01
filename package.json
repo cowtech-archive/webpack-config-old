@@ -1,0 +1,56 @@
+{
+  "name": "webpack-config",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint index.js",
+    "postpublish": "git push origin && git push origin -f --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cowtech/webpack-config"
+  },
+  "keywords": [],
+  "author": "Shogun <shogun@cowtech.it>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cowtech/webpack-config/issues"
+  },
+  "homepage": "https://github.com/cowtech/webpack-config",
+  "dependencies": {
+    "awesome-typescript-loader": "~3.2",
+    "babel-core": "~6.25",
+    "babel-loader": "~7.1",
+    "babel-polyfill": "~6.23",
+    "babel-preset-env": "~1.5",
+    "babel-preset-react": "~6.24",
+    "babili-webpack-plugin": "~0.1",
+    "cheerio": "^1.0.0-rc.1",
+    "css-loader": "~0.28",
+    "file-loader": "~0.11",
+    "html-webpack-exclude-assets-plugin": "~0.0",
+    "html-webpack-plugin": "~2.29",
+    "node-sass": "~4.5",
+    "postcss-cssnext": "~2.11",
+    "postcss-discard-comments": "~2.0",
+    "postcss-loader": "~2.0",
+    "postcss-remove-selectors": "~2.0",
+    "sass-loader": "~6.0",
+    "string-replace-loader": "~1.2",
+    "style-loader": "~0.18",
+    "typescript": "~2.4",
+    "webpack": "~3.0",
+    "webpack-bundle-analyzer": "~2.8",
+    "webpack-dev-server": "~2.5"
+  },
+  "devDependencies": {
+    "eslint": "~4.1",
+    "@cowtech/eslint-config": "~4.1"
+  }
+}
