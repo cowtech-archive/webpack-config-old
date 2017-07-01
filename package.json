@@ -1,6 +1,6 @@
 {
   "name": "@cowtech/webpack-config",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "CowTech WebPack configuration.",
   "main": "index.js",
   "files": [
@@ -51,6 +51,5 @@
     "webpack": "~3.0",
     "webpack-bundle-analyzer": "~2.8"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
