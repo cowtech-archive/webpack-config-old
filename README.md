@@ -3,7 +3,7 @@
 [![Package Version](https://badge.fury.io/js/%40cowtech%2Fwebpack-config.svg)](https://badge.fury.io/js/%40cowtech%2Fwebpack-config)
 [![Dependency Status](https://gemnasium.com/badges/github.com/cowtech/webpack-config.svg)](https://gemnasium.com/github.com/cowtech/webpack-config)
 
-CowTech WebPack configuration
+CowTech WebPack configuration.
 
 https://github.com/ShogunPanda/webpack-config
 
