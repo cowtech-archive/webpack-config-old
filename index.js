@@ -107,7 +107,7 @@ module.exports.setupEnvironment = function(env, serviceWorkerEnabled = true, ver
   );
 };
 
-module.exports.setupPlugins = function(environment, indexFile, icons){
+module.exports.setupPlugins = function(environment, indexFile, icons, otherPlugins){
   let env = environment.environment;
 
   if(!env)
@@ -132,6 +132,9 @@ module.exports.setupPlugins = function(environment, indexFile, icons){
     if(path.basename(process.argv[1]) === "webpack-dev-server")
       plugins.push(new GraphBundleAnalyzerPlugin({openAnalyzer: false}));
   }
+
+  if(Array.isArray(otherPlugins))
+    plugins.push(...otherPlugins);
 
   return plugins;
 };
@@ -201,7 +204,7 @@ module.exports.webpackConfig = function(env, configuration){
 
   const environment = module.exports.setupEnvironment(env, configuration.serviceWorkerEnabled, configuration.version);
   const destination = path.resolve(process.cwd(), configuration.distFolder || defaults.distFolder);
-  const plugins = configuration.plugins || module.exports.setupPlugins(environment, configuration.indexFile, configuration.icons);
+  const plugins = module.exports.setupPlugins(environment, configuration.indexFile, configuration.icons, configuration.plugins);
   const version = JSON.stringify(environment.version);
   const cssPipeline = module.exports.cssPipeline(env);
 
