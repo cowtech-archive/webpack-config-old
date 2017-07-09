@@ -129,6 +129,7 @@ module.exports.setupPlugins = function(environment, indexFile, icons, otherPlugi
     plugins.push(new BabiliPlugin({mangle: false})); // PI: Remove mangle when Safari 10 is dropped: https://github.com/mishoo/UglifyJS2/issues/1753
   else{
     plugins.push(new webpack.HotModuleReplacementPlugin());
+    plugins.push(new webpack.optimize.CommonsChunkPlugin({name: 'webpack-bootstrap.js'});
 
     if(path.basename(process.argv[1]) === "webpack-dev-server")
       plugins.push(new GraphBundleAnalyzerPlugin({openAnalyzer: false}));
