@@ -1,3 +1,7 @@
+### 2017-07-09 / 0.3.2
+
+* Minor fix.
+
 ### 2017-07-09 / 0.3.1
 
 * Use CommonsChunkPlugin in development to improve bundle-analyzer experience.
