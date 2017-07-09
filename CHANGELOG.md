@@ -1,3 +1,7 @@
+### 2017-07-09 / 0.3.3
+
+* Updated dependencies.
+
 ### 2017-07-09 / 0.3.2
 
 * Minor fix.
