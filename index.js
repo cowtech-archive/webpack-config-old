@@ -121,7 +121,8 @@ module.exports.setupPlugins = function(environment, indexFile, icons, otherPlugi
       "process.env": {NODE_ENV: JSON.stringify(env)} // This is needed by React for production mode
     }),
     new HtmlWebpackPlugin({template: indexFile || defaults.indexFile, minify: {collapseWhitespace: true}, excludeAssets: [/\.js$/]}),
-    new HtmlWebpackExcludeAssetsPlugin()
+    new HtmlWebpackExcludeAssetsPlugin(),
+    new webpack.optimize.ModuleConcatenationPlugin()
   ];
 
   if(env === "production")

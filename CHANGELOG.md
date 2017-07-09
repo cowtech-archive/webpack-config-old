@@ -1,3 +1,7 @@
+### 2017-07-09 / 0.3.0
+
+* Add module concatenation.
+
 ### 2017-07-09 / 0.2.3
 
 * Allow further customizations.
