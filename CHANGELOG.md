@@ -1,3 +1,7 @@
+### 2017-07-09 / 0.2.2
+
+* Allow further customizations.
+
 ### 2017-07-01 / 0.2.1
 
 * Minor fix.

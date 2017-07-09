@@ -97,12 +97,12 @@ module.exports.loadIcons = function(whitelist, svgPath, prefix = "icon"){
   return icons;
 };
 
-module.exports.setupEnvironment = function(env, serviceWorkerEnabled = true){
+module.exports.setupEnvironment = function(env, serviceWorkerEnabled = true, version = null){
   if(!env)
     env = "development";
 
   return Object.assign(
-    {environment: env, serviceWorkerEnabled, version: moment.utc().format("YYYYMMDD-HHmm")},
+    {environment: env, serviceWorkerEnabled, version: version || moment.utc().format("YYYYMMDD-HHmm")},
     packageInfo.site.common, (packageInfo.site[env] || {})
   );
 };
@@ -199,9 +199,9 @@ module.exports.webpackConfig = function(env, configuration){
   if(!env)
     env = "development";
 
-  const environment = module.exports.setupEnvironment(env, configuration.serviceWorkerEnabled);
+  const environment = module.exports.setupEnvironment(env, configuration.serviceWorkerEnabled, configuration.version);
   const destination = path.resolve(process.cwd(), configuration.distFolder || defaults.distFolder);
-  const plugins = module.exports.setupPlugins(environment, configuration.indexFile, configuration.icons);
+  const plugins = configuration.plugins || module.exports.setupPlugins(environment, configuration.indexFile, configuration.icons);
   const version = JSON.stringify(environment.version);
   const cssPipeline = module.exports.cssPipeline(env);
 
