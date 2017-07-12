@@ -20,10 +20,10 @@ const defaults = {
   indexFile: "index.html.ejs",
   distFolder: "dist",
   babel: {
-    browsers: ["last 2 versions", "IE 11"]
+    browsers: ["last 2 versions"]
   },
   postcss: {
-    browsers: ["last 2 versions", "IE 11"],
+    browsers: ["last 2 versions"],
     selectorBlackList: [
       /figure|hr|pre|abbr|code|kbd|samp|dfn|mark|small|sub|sup|audio|video|details|menu|summary|canvas|template|code|figcaption|main|input|fieldset/,
       /button|optgroup|select|textarea|legend|progress|textarea|file-upload-button|::-webkit-file-upload-button/,

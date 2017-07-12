@@ -1,4 +1,8 @@
-### 2017-07-11 / 0.4.0
+### 2017-07-12 / 0.4.1
+
+* Dropped support for IE 11.
+
+### 2017-07-12 / 0.4.0
 
 * Added React and Inferno support.
 
