@@ -20,7 +20,7 @@ const defaults = {
   indexFile: "index.html.ejs",
   distFolder: "dist",
   babel: {
-    browsers: ["last 2 versions"]
+    browsers: ["last 2 versions", "IE 11"]
   },
   postcss: {
     browsers: ["last 2 versions", "IE 11"],
@@ -142,6 +142,8 @@ module.exports.setupPlugins = function(environment, indexFile, icons, otherPlugi
 };
 
 module.exports.setupRules = function(transpilers, cssPipeline, version){
+  const babelEnv = ["env", {targets: {browsers: defaults.babel.browsers}}];
+
   const rules = [
     {test: /\.scss$/, use: cssPipeline},
     {
@@ -160,14 +162,31 @@ module.exports.setupRules = function(transpilers, cssPipeline, version){
   ];
 
   if(transpilers.includes("babel")){
-    rules.unshift({
-      test: /\.jsx?$/, exclude: /node_modules/,
-      use: {loader: "babel-loader", options: {presets: ["react", ["env", {targets: {browsers: defaults.babel.browsers}}]]}}
-    });
+    if(transpilers.includes("inferno")){
+      rules.unshift({
+        test: /\.jsx$/, exclude: /node_modules/,
+        use: {loader: "babel-loader", options: {presets: ["react", babelEnv], plugins: ["syntax-jsx", ["inferno", {imports: true}]]}}
+      });
+    }else if(transpilers.includes("react"))
+      rules.unshift({test: /\.jsx$/, exclude: /node_modules/, use: {loader: "babel-loader", options: {presets: ["react", babelEnv]}}});
+
+    rules.unshift({test: /\.js$/, exclude: /node_modules/, use: {loader: "babel-loader", options: {presets: [babelEnv]}}});
   }
 
-  if(transpilers.includes("typescript"))
-    rules.unshift({test: /\.tsx?$/, loader: "awesome-typescript-loader"});
+  if(transpilers.includes("typescript")){
+    if(transpilers.includes("inferno")){
+      rules.unshift({
+        test: /\.tsx$/,
+        use: [
+          {loader: "babel-loader", options: {presets: [babelEnv], plugins: ["syntax-jsx", ["inferno", {imports: true}]]}},
+          {loader: "awesome-typescript-loader"}
+        ]
+      });
+    }else if(transpilers.includes("react"))
+      rules.unshift({test: /\.tsx$/, loader: "awesome-typescript-loader"});
+
+    rules.unshift({test: /\.ts$/, loader: "awesome-typescript-loader"});
+  }
 
   return rules;
 };

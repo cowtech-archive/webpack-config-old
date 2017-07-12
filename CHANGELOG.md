@@ -1,3 +1,7 @@
+### 2017-07-11 / 0.4.0
+
+* Added React and Inferno support.
+
 ### 2017-07-11 / 0.3.4
 
 * Added SourceMaps.
