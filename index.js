@@ -238,7 +238,7 @@ module.exports.webpackConfig = function(env, configuration){
     resolve: {extensions: module.exports.setupResolvers(configuration.transpilers)},
     plugins,
     externals: configuration.externals,
-    devtool: env === "development" ? "inline-source-map" : null,
+    devtool: env === "development" ? "inline-source-map" : false,
     devServer: Object.assign(
       {
         contentBase: destination,
