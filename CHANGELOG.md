@@ -1,3 +1,7 @@
+### 2017-07-12 / 0.4.3
+
+* Minor bugfix.
+
 ### 2017-07-12 / 0.4.2
 
 * Do not use generators for async functions.
