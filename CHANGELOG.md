@@ -1,3 +1,7 @@
+### 2017-07-12 / 0.4.2
+
+* Do not use generators for async functions.
+
 ### 2017-07-12 / 0.4.1
 
 * Dropped support for IE 11.

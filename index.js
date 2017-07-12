@@ -142,7 +142,7 @@ module.exports.setupPlugins = function(environment, indexFile, icons, otherPlugi
 };
 
 module.exports.setupRules = function(transpilers, cssPipeline, version){
-  const babelEnv = ["env", {targets: {browsers: defaults.babel.browsers}}];
+  const babelEnv = ["env", {targets: {browsers: defaults.babel.browsers, exclude: ["transform-async-to-generator", "transform-regenerator"]}}];
 
   const rules = [
     {test: /\.scss$/, use: cssPipeline},
