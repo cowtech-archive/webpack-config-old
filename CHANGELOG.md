@@ -1,3 +1,7 @@
+### 2017-07-11 / 0.3.4
+
+* Added SourceMaps.
+
 ### 2017-07-09 / 0.3.3
 
 * Updated dependencies.
