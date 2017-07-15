@@ -1,3 +1,7 @@
+### 2017-07-15 / 0.4.5
+
+* Added missing dependency.
+
 ### 2017-07-12 / 0.4.4
 
 * Minor bugfix.
