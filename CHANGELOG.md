@@ -1,4 +1,4 @@
-### 0.2.0 / 2017-07-19
+### 2017-07-19 / 0.5.0
 
 * Added CSS pipeline parameters to configuration.
 
