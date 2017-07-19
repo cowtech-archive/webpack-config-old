@@ -1,3 +1,7 @@
+### 0.2.0 / 2017-07-19
+
+* Added CSS pipeline parameters to configuration.
+
 ### 2017-07-15 / 0.4.5
 
 * Added missing dependency.
