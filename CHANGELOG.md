@@ -1,3 +1,8 @@
+### 2017-07-31 / 0.5.1
+
+* Make several features optional.
+* Updated dependencies.
+
 ### 2017-07-19 / 0.5.0
 
 * Added CSS pipeline parameters to configuration.
