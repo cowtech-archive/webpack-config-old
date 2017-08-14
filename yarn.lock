@@ -9,8 +9,8 @@
     eslint "<4.5"
 
 "@cowtech/package-utils@~0.2":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@cowtech/package-utils/-/package-utils-0.2.1.tgz#80e9390d7500f35c29357eb36d2760bbb07c4f10"
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@cowtech/package-utils/-/package-utils-0.2.2.tgz#5b70a9f1c1b502a2afb1efd575b2ca2e38eb4872"
   dependencies:
     commander "~2.11"
     semver "~5.4"
