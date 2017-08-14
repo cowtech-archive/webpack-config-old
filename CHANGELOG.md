@@ -1,3 +1,7 @@
+### 2017-08-14 / 0.5.2
+
+* Updated dependencies.
+
 ### 2017-07-31 / 0.5.1
 
 * Make several features optional.

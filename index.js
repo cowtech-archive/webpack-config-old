@@ -11,7 +11,6 @@ const cheerio = require('cheerio');
 const moment = require('moment');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin');
 const GraphBundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const BabiliPlugin = require('babili-webpack-plugin');
 const packageInfo = require(path.resolve(process.cwd(), './package.json'));
