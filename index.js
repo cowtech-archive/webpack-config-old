@@ -124,8 +124,11 @@ module.exports.setupPlugins = function(environment, indexFile, icons, otherPlugi
     })
   ];
 
-  if(indexFile !== false)
-    plugins.push(new HtmlWebpackPlugin({template: indexFile || defaults.indexFile, minify: {collapseWhitespace: true}, excludeAssets: [/\.js$/]}));
+  if(indexFile !== false){
+    plugins.push(
+      new HtmlWebpackPlugin({template: indexFile || defaults.indexFile, minify: {collapseWhitespace: true}, inject: false, excludeAssets: [/\.js$/]})
+    );
+  }
 
   plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
 
