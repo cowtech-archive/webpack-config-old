@@ -30,6 +30,7 @@
     "@cowtech/eslint-config": "~4.6",
     "@cowtech/package-utils": "~0.2",
     "@cowtech/tslint-config": "~5.7",
+    "@types/node": "~8.0",
     "@types/webpack": "~3.0",
     "awesome-typescript-loader": "~3.2",
     "babel-core": "~6.26",
@@ -56,16 +57,16 @@
     "style-loader": "~0.18",
     "tslint": "~5.7",
     "tslint-react": "~3.2",
-    "typescript": "^2.5.2",
+    "ts-node": "~3.3",
+    "typescript": "~2.5",
     "webpack": "~3.5",
-    "webpack-bundle-analyzer": "~2.9"
+    "webpack-bundle-analyzer": "~2.9",
+    "webpack-dev-server": "~2.7"
   },
   "devDependencies": {
     "@cowtech/package-utils": "~0.2",
     "@types/cheerio": "~0.22",
-    "@types/node": "~8.0",
     "rollup": "~0.49",
-    "rollup-plugin-typescript2": "~0.5",
-    "ts-node": "~3.3"
+    "rollup-plugin-typescript2": "~0.5"
   }
 }

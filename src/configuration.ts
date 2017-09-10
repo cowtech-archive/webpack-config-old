@@ -43,7 +43,7 @@ export interface PluginOptions{
 export interface Configuration{
   environment?: string;
   version?: string;
-  entries: string | Array<string>;
+  entries: string | Array<string> | {[key: string]: string};
   distFolder: string;
   transpilers?: Array<string>;
   indexFile?: string | boolean;
