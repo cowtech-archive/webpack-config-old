@@ -1,3 +1,10 @@
+### 2017-09-10 / 0.6.0
+
+* Completely rewritten in TypeScript.
+* Added afterHook to the main function to allow manipulation of returned configuration.
+* Added material-design-icons icons loader.
+* Completely reorganized configuration.
+
 ### 2017-08-17 / 0.5.5
 
 * Bugfix.
