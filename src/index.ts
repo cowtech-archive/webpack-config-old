@@ -44,7 +44,7 @@ export function setup(env: string, configuration: Configuration, afterHook?: Hoo
   if(!env)
     env = 'development';
 
-  if(configuration.environment)
+  if(!configuration.environment)
     configuration.environment = env;
 
   const environment: any = loadEnvironment(configuration);

@@ -5,37 +5,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var fs = require('fs');
 var path = require('path');
 var moment = require('moment');
-var sass = require('sass');
 var webpack = require('webpack');
 var cheerio = require('cheerio');
 
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
-
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
-
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-
-
-var __assign = Object.assign || function __assign(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-    }
-    return t;
-};
-
-var defaultConfiguration = {
+const defaultConfiguration = {
     version: '1.0',
     entries: [],
     distFolder: 'dist',
@@ -56,7 +29,7 @@ var defaultConfiguration = {
         exclude: ['transform-async-to-generator', 'transform-regenerator']
     },
     scss: {
-        includePaths: ['lazier.sass', 'ribbon.css', 'normalize.css'].map(function (l) { return "node_modules/" + l; }),
+        includePaths: ['lazier.sass', 'ribbon.css', 'normalize.css'].map(l => `node_modules/${l}`),
         plugins: ['remove-selectors', 'cssnext', 'discard-comments'],
         browsersWhiteList: ['last 2 versions'],
         selectorBlackList: [
@@ -82,41 +55,39 @@ var defaultConfiguration = {
 };
 
 function loadEnvironment(configuration) {
-    var packageInfo = require(path.resolve(process.cwd(), './package.json'));
-    var environment = configuration.hasOwnProperty('environment') ? configuration.environment : defaultConfiguration.environment;
-    var swe = configuration.hasOwnProperty('serviceWorkerEnabled') ? configuration.serviceWorkerEnabled : defaultConfiguration.serviceWorkerEnabled;
-    var version = configuration.hasOwnProperty('version') ? configuration.version : defaultConfiguration.version;
+    const packageInfo = require(path.resolve(process.cwd(), './package.json'));
+    const environment = configuration.hasOwnProperty('environment') ? configuration.environment : defaultConfiguration.environment;
+    const swe = configuration.hasOwnProperty('serviceWorkerEnabled') ? configuration.serviceWorkerEnabled : defaultConfiguration.serviceWorkerEnabled;
+    const version = configuration.hasOwnProperty('version') ? configuration.version : defaultConfiguration.version;
     if (!packageInfo.site)
         packageInfo.site = {};
-    return __assign({ environment: environment, serviceWorkerEnabled: swe, version: version || moment.utc().format('YYYYMMDD-HHmmss') }, (packageInfo.site.common || {}), (packageInfo.site[environment] || {}));
+    return Object.assign({ environment, serviceWorkerEnabled: swe, version: version || moment.utc().format('YYYYMMDD-HHmmss') }, (packageInfo.site.common || {}), (packageInfo.site[environment] || {}));
 }
 
-var postcssPlugins = function (toLoad, browsersWhiteList, selectorBlackList) {
-    var plugins = [];
+const postcssPlugins = function (toLoad, browsersWhiteList, selectorBlackList) {
+    const plugins = [];
     if (toLoad.includes('remove-selectors'))
         plugins.push(require('postcss-remove-selectors')({ selectors: selectorBlackList || defaultConfiguration.scss.selectorBlackList }));
     if (toLoad.includes('cssnext'))
         plugins.push(require('postcss-cssnext')({ browsers: browsersWhiteList || defaultConfiguration.scss.browsersWhiteList, cascade: false }));
     if (toLoad.includes('discard-comments'))
         plugins.push(require('postcss-discard-comments')({ removeAll: true }));
-    for (var _i = 0, _a = toLoad.filter(function (a) { return a && typeof a !== 'string'; }); _i < _a.length; _i++) {
-        var additional = _a[_i];
+    for (const additional of toLoad.filter((a) => a && typeof a !== 'string'))
         plugins.push(additional);
-    }
     return plugins;
 };
 function setupCssPipeline(configuration) {
-    var options = configuration.scss || {};
-    var defaultOptions = defaultConfiguration.scss;
-    var plugins = options.hasOwnProperty('plugins') ? options.plugins : defaultOptions.plugins;
-    var browsersWhiteList = options.hasOwnProperty('browsersWhiteList') ? options.browsersWhiteList : defaultOptions.browsersWhiteList;
-    var selectorBlackList = options.hasOwnProperty('selectorBlackList') ? options.selectorBlackList : defaultOptions.selectorBlackList;
-    var pipeline = [
+    const options = configuration.scss || {};
+    const defaultOptions = defaultConfiguration.scss;
+    const plugins = options.hasOwnProperty('plugins') ? options.plugins : defaultOptions.plugins;
+    const browsersWhiteList = options.hasOwnProperty('browsersWhiteList') ? options.browsersWhiteList : defaultOptions.browsersWhiteList;
+    const selectorBlackList = options.hasOwnProperty('selectorBlackList') ? options.selectorBlackList : defaultOptions.selectorBlackList;
+    const pipeline = [
         'css-loader',
-        { loader: 'postcss-loader', options: { plugins: function () { return postcssPlugins(plugins, browsersWhiteList, selectorBlackList); } } },
+        { loader: 'postcss-loader', options: { plugins: () => postcssPlugins(plugins, browsersWhiteList, selectorBlackList) } },
         { loader: 'sass-loader', options: {
                 outputStyle: 'compressed',
-                functions: { svg: function (param) { return new sass.types.String("url('data:image/svg+xml;utf8," + fs.readFileSync(param.getValue()) + "')"); } },
+                functions: { svg: (param) => new sass.types.String(`url('data:image/svg+xml;utf8,${fs.readFileSync(param.getValue())}')`) },
                 includePaths: defaultConfiguration.scss.includePaths
             }
         }
@@ -126,17 +97,17 @@ function setupCssPipeline(configuration) {
     return pipeline;
 }
 
-var fontAwesomeLoader = function (toLoad, loaderConfiguration) {
-    var library = cheerio.load(fs.readFileSync(path.resolve(process.cwd(), loaderConfiguration.fontAwesomePath), 'utf-8'));
-    var icons = {
+const fontAwesomeLoader = function (toLoad, loaderConfiguration) {
+    const library = cheerio.load(fs.readFileSync(path.resolve(process.cwd(), loaderConfiguration.fontAwesomePath), 'utf-8'));
+    const icons = {
         prefix: loaderConfiguration.prefix,
         tags: {},
         definitions: ''
     };
-    icons.tags = library('symbol[id^=icon-]').toArray().reduce(function (accu, dom, index) {
-        var icon = library(dom);
-        var name = icon.attr('id').replace(/^icon-/g, '');
-        var tag = "i" + index;
+    icons.tags = library('symbol[id^=icon-]').toArray().reduce((accu, dom, index) => {
+        const icon = library(dom);
+        const name = icon.attr('id').replace(/^icon-/g, '');
+        const tag = `i${index}`;
         icon.attr('id', tag);
         icon.find('title').remove();
         if (toLoad.includes(name)) {
@@ -148,25 +119,23 @@ var fontAwesomeLoader = function (toLoad, loaderConfiguration) {
     }, {});
     return icons;
 };
-var materialLoader = function (toLoad, loaderConfiguration) {
-    var icons = {
+const materialLoader = function (toLoad, loaderConfiguration) {
+    const icons = {
         prefix: loaderConfiguration.prefix,
         tags: {},
         definitions: ''
     };
-    icons.tags = toLoad.reduce(function (accu, entry, index) {
+    icons.tags = toLoad.reduce((accu, entry, index) => {
         if (!entry.includes(':'))
             entry += ':action';
-        var _a = entry.split(':'), name = _a[0], category = _a[1];
-        var tag = "i" + index;
-        var svgFile = path.resolve(process.cwd(), "node_modules/material-design-icons/" + category + "/svg/production/ic_" + name.replace(/-/g, '_') + "_48px.svg");
+        const [name, category] = entry.split(':');
+        const tag = `i${index}`;
+        const svgFile = path.resolve(process.cwd(), `node_modules/material-design-icons/${category}/svg/production/ic_${name.replace(/-/g, '_')}_48px.svg`);
         // Load the file and manipulate it
-        var icon = cheerio.load(fs.readFileSync(svgFile, 'utf-8'))('svg');
+        const icon = cheerio.load(fs.readFileSync(svgFile, 'utf-8'))('svg');
         icon.attr('id', tag);
-        for (var _i = 0, _b = ['xmlns', 'width', 'height']; _i < _b.length; _i++) {
-            var attr = _b[_i];
+        for (const attr of ['xmlns', 'width', 'height'])
             icon.removeAttr(attr);
-        }
         // Save the definition - as any is needed since .wrap is not in the type definitions yet
         icons.definitions += icon.wrap('<div/>').parent().html().replace(/\n/mg, '').replace(/^\s+/mg, '');
         accu[name] = tag;
@@ -175,10 +144,10 @@ var materialLoader = function (toLoad, loaderConfiguration) {
     return icons;
 };
 function loadIcons(configuration) {
-    var icons = null;
-    var toLoad = configuration.hasOwnProperty('icons') ? configuration.icons : defaultConfiguration.icons;
-    var rawIconsLoader = configuration.hasOwnProperty('iconsLoader') ? configuration.iconsLoader : defaultConfiguration.iconsLoader;
-    var iconsLoader = typeof rawIconsLoader === 'string' ? { id: rawIconsLoader } : rawIconsLoader;
+    let icons = null;
+    const toLoad = configuration.hasOwnProperty('icons') ? configuration.icons : defaultConfiguration.icons;
+    const rawIconsLoader = configuration.hasOwnProperty('iconsLoader') ? configuration.iconsLoader : defaultConfiguration.iconsLoader;
+    const iconsLoader = typeof rawIconsLoader === 'string' ? { id: rawIconsLoader } : rawIconsLoader;
     switch (iconsLoader.id.toLowerCase()) {
         case 'fontawesome':
             icons = fontAwesomeLoader(toLoad, iconsLoader);
@@ -190,20 +159,20 @@ function loadIcons(configuration) {
     return icons;
 }
 
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var GraphBundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-var BabiliPlugin = require('babili-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const GraphBundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BabiliPlugin = require('babili-webpack-plugin');
 function setupPlugins(configuration, environment) {
-    var env = configuration.environment;
-    var options = configuration.pluginsOptions || {};
-    var defaultOptions = defaultConfiguration.pluginsOptions;
-    var indexFile = configuration.hasOwnProperty('indexFile') ? configuration.indexFile : defaultConfiguration.indexFile;
-    var concatenate = options.hasOwnProperty('concatenate') ? options.concatenate : defaultOptions.concatenate;
-    var minify = options.hasOwnProperty('minify') ? options.minify : defaultOptions.minify;
-    var hotModuleReload = options.hasOwnProperty('hotModuleReload') ? options.hotModuleReload : defaultOptions.hotModuleReload;
-    var commonChunks = options.hasOwnProperty('commonChunks') ? options.commonChunks : defaultOptions.commonChunks;
-    var sizeAnalyzerServer = options.hasOwnProperty('sizeAnalyzerServer') ? options.sizeAnalyzerServer : defaultOptions.sizeAnalyzerServer;
-    var plugins = [
+    const env = configuration.environment;
+    const options = configuration.pluginsOptions || {};
+    const defaultOptions = defaultConfiguration.pluginsOptions;
+    const indexFile = configuration.hasOwnProperty('indexFile') ? configuration.indexFile : defaultConfiguration.indexFile;
+    const concatenate = options.hasOwnProperty('concatenate') ? options.concatenate : defaultOptions.concatenate;
+    const minify = options.hasOwnProperty('minify') ? options.minify : defaultOptions.minify;
+    const hotModuleReload = options.hasOwnProperty('hotModuleReload') ? options.hotModuleReload : defaultOptions.hotModuleReload;
+    const commonChunks = options.hasOwnProperty('commonChunks') ? options.commonChunks : defaultOptions.commonChunks;
+    const sizeAnalyzerServer = options.hasOwnProperty('sizeAnalyzerServer') ? options.sizeAnalyzerServer : defaultOptions.sizeAnalyzerServer;
+    const plugins = [
         new webpack.DefinePlugin({
             'env': JSON.stringify(environment),
             'version': JSON.stringify(environment.version),
@@ -228,22 +197,22 @@ function setupPlugins(configuration, environment) {
             plugins.push(new GraphBundleAnalyzerPlugin({ openAnalyzer: false }));
     }
     if (Array.isArray(configuration.plugins))
-        plugins.push.apply(plugins, configuration.plugins);
+        plugins.push(...configuration.plugins);
     return plugins;
 }
 
 function setupRules(configuration, cssPipeline, version) {
-    var babel = configuration.hasOwnProperty('babel') ? configuration.babel : defaultConfiguration.babel;
-    var transpilers = configuration.hasOwnProperty('transpilers') ? configuration.transpilers : defaultConfiguration.transpilers;
-    var babelEnv = ['env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude }];
-    var rules = [
+    const babel = configuration.hasOwnProperty('babel') ? configuration.babel : defaultConfiguration.babel;
+    const transpilers = configuration.hasOwnProperty('transpilers') ? configuration.transpilers : defaultConfiguration.transpilers;
+    const babelEnv = ['env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude }];
+    const rules = [
         { test: /\.scss$/, use: cssPipeline },
         {
             test: /\.(?:png|jpg|svg)$/,
             use: [
                 {
                     loader: 'file-loader',
-                    options: { name: '[path][name].[ext]', outputPath: function (p) { return "" + p.replace('src/', ''); }, publicPath: function (p) { return "/" + p.replace('src/', ''); } }
+                    options: { name: '[path][name].[ext]', outputPath: (p) => `${p.replace('src/', '')}`, publicPath: (p) => `/${p.replace('src/', '')}` }
                 }
             ]
         },
@@ -280,8 +249,8 @@ function setupRules(configuration, cssPipeline, version) {
     return rules;
 }
 function setupResolvers(configuration) {
-    var transpilers = configuration.hasOwnProperty('transpilers') ? configuration.transpilers : defaultConfiguration.transpilers;
-    var extensions = ['.json', '.js'];
+    const transpilers = configuration.hasOwnProperty('transpilers') ? configuration.transpilers : defaultConfiguration.transpilers;
+    const extensions = ['.json', '.js'];
     if (transpilers.includes('babel'))
         extensions.push('.jsx');
     if (transpilers.includes('typescript'))
@@ -290,10 +259,10 @@ function setupResolvers(configuration) {
 }
 
 function setupServer(configuration) {
-    var server = configuration.server || {};
-    var defaultServer = defaultConfiguration.server;
-    var https = server.hasOwnProperty('https') ? server.https : defaultServer.https;
-    var config = {
+    const server = configuration.server || {};
+    const defaultServer = defaultConfiguration.server;
+    const https = server.hasOwnProperty('https') ? server.https : defaultServer.https;
+    const config = {
         host: server.host || defaultServer.host,
         port: server.port || defaultServer.port,
         historyApiFallback: server.hasOwnProperty('historyApiFallback') ? server.historyApiFallback : defaultServer.historyApiFallback,
@@ -311,24 +280,24 @@ function setupServer(configuration) {
 function setup(env, configuration, afterHook) {
     if (!env)
         env = 'development';
-    if (configuration.environment)
+    if (!configuration.environment)
         configuration.environment = env;
-    var environment = loadEnvironment(configuration);
-    var destination = path.resolve(process.cwd(), configuration.distFolder || defaultConfiguration.distFolder);
-    var version = JSON.stringify(environment.version);
-    var cssPipeline = setupCssPipeline(configuration);
-    var plugins = setupPlugins(configuration, environment);
-    var config = {
+    const environment = loadEnvironment(configuration);
+    const destination = path.resolve(process.cwd(), configuration.distFolder || defaultConfiguration.distFolder);
+    const version = JSON.stringify(environment.version);
+    const cssPipeline = setupCssPipeline(configuration);
+    const plugins = setupPlugins(configuration, environment);
+    let config = {
         entry: configuration.entries || defaultConfiguration.entries,
         output: { filename: '[name]', path: destination, publicPath: '/' },
         module: {
             rules: setupRules(configuration, cssPipeline, version)
         },
         resolve: { extensions: setupResolvers(configuration) },
-        plugins: plugins,
+        plugins,
         externals: configuration.externals,
         devtool: env === 'development' ? (configuration.sourceMapsType || defaultConfiguration.sourceMapsType) : null,
-        devServer: __assign({ contentBase: destination }, setupServer(configuration))
+        devServer: Object.assign({ contentBase: destination }, setupServer(configuration))
     };
     if (typeof afterHook === 'function')
         config = afterHook(config);
