@@ -1,3 +1,7 @@
+### 2017-09-11 / 0.6.2
+
+* Correctly rebuild JS module.
+
 ### 2017-09-11 / 0.6.1
 
 * Fixed disabled devtool.

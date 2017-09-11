@@ -296,7 +296,7 @@ function setup(env, configuration, afterHook) {
         resolve: { extensions: setupResolvers(configuration) },
         plugins,
         externals: configuration.externals,
-        devtool: env === 'development' ? (configuration.sourceMapsType || defaultConfiguration.sourceMapsType) : null,
+        devtool: env === 'development' ? (configuration.sourceMapsType || defaultConfiguration.sourceMapsType) : false,
         devServer: Object.assign({ contentBase: destination }, setupServer(configuration))
     };
     if (typeof afterHook === 'function')
