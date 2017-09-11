@@ -1,3 +1,7 @@
+### 2017-09-11 / 0.6.1
+
+* Fixed disabled devtool.
+
 ### 2017-09-10 / 0.6.0
 
 * Completely rewritten in TypeScript.

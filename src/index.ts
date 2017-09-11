@@ -63,7 +63,7 @@ export function setup(env: string, configuration: Configuration, afterHook?: Hoo
     resolve: {extensions: setupResolvers(configuration)},
     plugins,
     externals: configuration.externals,
-    devtool: env === 'development' ? (configuration.sourceMapsType || defaultConfiguration.sourceMapsType) : null,
+    devtool: env === 'development' ? (configuration.sourceMapsType || defaultConfiguration.sourceMapsType) : false,
     devServer: {contentBase: destination, ...setupServer(configuration)}
   };
 
