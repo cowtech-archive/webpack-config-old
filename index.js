@@ -219,7 +219,8 @@ function setupRules(configuration, cssPipeline, version) {
         {
             test: /manifest\.json$/,
             use: [{ loader: 'file-loader', options: { name: 'manifest.json' } }, { loader: 'string-replace-loader', query: { search: '@version@', replace: version } }]
-        }
+        },
+        { test: /robots\.txt$/, use: [{ loader: 'file-loader', options: { name: 'robots\.txt' } }] }
     ];
     if (transpilers.includes('babel')) {
         if (transpilers.includes('inferno')) {
