@@ -1,3 +1,7 @@
+### 2017-09-12 / 0.6.3
+
+* Supports robots.txt files.
+
 ### 2017-09-11 / 0.6.2
 
 * Correctly rebuild JS module.
