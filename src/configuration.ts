@@ -41,6 +41,7 @@ export interface PluginOptions{
 }
 
 export interface ServiceWorker{
+  template?: string;
   source: string;
   dest: string;
   patterns: Array<string | RegExp>;

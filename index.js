@@ -275,9 +275,10 @@ function setupServiceWorker(config, configuration) {
     const dest = loadConfigurationEntry('dest', sw, defaultConfiguration.serviceWorker);
     const globPatterns = loadConfigurationEntry('patterns', sw, defaultConfiguration.serviceWorker);
     const globIgnores = loadConfigurationEntry('ignores', sw, defaultConfiguration.serviceWorker);
+    const transpilers = loadConfigurationEntry('transpilers', configuration);
     if (sw === false)
         return config;
-    config.entry['sw.js'] = './src/js/service-worker.ts';
+    config.entry[dest] = sw.template || `./src/js/service-worker.${transpilers.includes('typescript') ? 'ts' : 'js'}`;
     config.module.rules.unshift({
         test: /workbox-sw\.[a-z]+\..+\.js$/,
         use: [{ loader: 'file-loader', options: { name: 'js/workbox.js' } }, { loader: 'babel-loader', options: { presets: ['minify', { comments: false }] } }]

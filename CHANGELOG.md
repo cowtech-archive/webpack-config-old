@@ -1,3 +1,7 @@
+### 2017-09-13 / 0.7.1
+
+* Correctly set Service Worker template file.
+
 ### 2017-09-13 / 0.7.0
 
 * Service Workers support.
