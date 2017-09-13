@@ -1,7 +1,7 @@
 import {basename} from 'path';
 import * as webpack from 'webpack';
 
-import {Configuration, PluginOptions, defaultConfiguration} from './configuration';
+import {Configuration, PluginOptions, defaultConfiguration, loadConfigurationEntry} from './configuration';
 import {loadIcons} from './icons';
 
 const HtmlWebpackPlugin: any = require('html-webpack-plugin');
@@ -13,12 +13,12 @@ export function setupPlugins(configuration: Configuration, environment: any): Ar
   const options: PluginOptions = configuration.pluginsOptions || {};
   const defaultOptions: PluginOptions = defaultConfiguration.pluginsOptions;
 
-  const indexFile: string | boolean = configuration.hasOwnProperty('indexFile') ? configuration.indexFile : defaultConfiguration.indexFile;
-  const concatenate: boolean = options.hasOwnProperty('concatenate') ? options.concatenate : defaultOptions.concatenate;
-  const minify: boolean = options.hasOwnProperty('minify') ? options.minify : defaultOptions.minify;
-  const hotModuleReload: boolean = options.hasOwnProperty('hotModuleReload') ? options.hotModuleReload : defaultOptions.hotModuleReload;
-  const commonChunks: boolean = options.hasOwnProperty('commonChunks') ? options.commonChunks : defaultOptions.commonChunks;
-  const sizeAnalyzerServer: boolean = options.hasOwnProperty('sizeAnalyzerServer') ? options.sizeAnalyzerServer : defaultOptions.sizeAnalyzerServer;
+  const indexFile: string | boolean = loadConfigurationEntry('indexFile', configuration);
+  const concatenate: boolean = loadConfigurationEntry('concatenate', options, defaultOptions);
+  const minify: boolean = loadConfigurationEntry('minify', options, defaultOptions);
+  const hotModuleReload: boolean = loadConfigurationEntry('hotModuleReload', options, defaultOptions);
+  const commonChunks: boolean = loadConfigurationEntry('commonChunks', options, defaultOptions);
+  const sizeAnalyzerServer: boolean = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
 
   const plugins: Array<any> = [
     new webpack.DefinePlugin({

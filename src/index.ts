@@ -2,11 +2,12 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import * as webpack from 'webpack';
 
-import {Configuration, Server, Https, defaultConfiguration} from './configuration';
+import {Configuration, Server, Https, defaultConfiguration, loadConfigurationEntry} from './configuration';
 import {loadEnvironment} from './environment';
 import {setupCssPipeline} from './scss';
 import {setupPlugins} from './plugins';
 import {setupRules, setupResolvers} from './rules';
+import {setupServiceWorker} from './service-worker';
 
 export type Hook = (configuration: webpack.Configuration) => webpack.Configuration;
 
@@ -20,14 +21,14 @@ export * from './scss';
 export function setupServer(configuration: Configuration): any{
   const server: Server = configuration.server || {};
   const defaultServer: Server = defaultConfiguration.server;
-  const https: Https | boolean = server.hasOwnProperty('https') ? server.https : defaultServer.https;
+  const https: Https | boolean = loadConfigurationEntry('https', server, defaultServer);
 
   const config: any = {
-    host: server.host || defaultServer.host,
-    port: server.port || defaultServer.port,
-    historyApiFallback: server.hasOwnProperty('historyApiFallback') ? server.historyApiFallback : defaultServer.historyApiFallback,
-    compress: server.hasOwnProperty('compress') ? server.compress : defaultServer.compress,
-    hot: server.hasOwnProperty('hot') ? server.hot : defaultServer.hot
+    host: loadConfigurationEntry('host', server, defaultServer),
+    port: loadConfigurationEntry('port', server, defaultServer),
+    historyApiFallback: loadConfigurationEntry('historyApiFallback', server, defaultServer),
+    compress: loadConfigurationEntry('compress', server, defaultServer),
+    hot: loadConfigurationEntry('hot', server, defaultServer)
   };
 
   if(https){
@@ -66,6 +67,9 @@ export function setup(env: string, configuration: Configuration, afterHook?: Hoo
     devtool: env === 'development' ? (configuration.sourceMapsType || defaultConfiguration.sourceMapsType) : false,
     devServer: {contentBase: destination, ...setupServer(configuration)}
   };
+
+  if(env === 'production')
+    config = setupServiceWorker(config, configuration);
 
   if(typeof afterHook === 'function')
     config = afterHook(config);

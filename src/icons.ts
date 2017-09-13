@@ -2,7 +2,7 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import * as cheerio from 'cheerio';
 
-import {Configuration, IconsLoader, defaultConfiguration} from './configuration';
+import {Configuration, IconsLoader, loadConfigurationEntry} from './configuration';
 
 const fontAwesomeLoader = function(toLoad: Array<string>, loaderConfiguration?: IconsLoader): Icons{
   const library: CheerioStatic = cheerio.load(readFileSync(resolve(process.cwd(), loaderConfiguration.fontAwesomePath), 'utf-8'));
@@ -73,8 +73,8 @@ export interface Icons{
 export function loadIcons(configuration: Configuration): Icons{
   let icons: Icons = null;
 
-  const toLoad: Array<string> = configuration.hasOwnProperty('icons') ? configuration.icons : defaultConfiguration.icons;
-  const rawIconsLoader: string | IconsLoader = configuration.hasOwnProperty('iconsLoader') ? configuration.iconsLoader : defaultConfiguration.iconsLoader;
+  const toLoad: Array<string> = loadConfigurationEntry('icons', configuration);
+  const rawIconsLoader: string | IconsLoader = loadConfigurationEntry('iconsLoader', configuration);
   const iconsLoader: IconsLoader = typeof rawIconsLoader === 'string' ? {id: rawIconsLoader} : rawIconsLoader;
 
   switch(iconsLoader.id.toLowerCase()){

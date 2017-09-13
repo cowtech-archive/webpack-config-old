@@ -35,6 +35,12 @@ export interface PluginOptions {
     commonChunks?: boolean;
     sizeAnalyzerServer?: boolean;
 }
+export interface ServiceWorker {
+    source: string;
+    dest: string;
+    patterns: Array<string | RegExp>;
+    ignores: Array<string | RegExp>;
+}
 export interface Configuration {
     environment?: string;
     version?: string;
@@ -53,6 +59,11 @@ export interface Configuration {
     externals?: Array<string>;
     sourceMapsType?: webpack.Options.Devtool;
     server?: Server;
-    serviceWorkerEnabled?: boolean;
+    serviceWorker?: ServiceWorker | boolean;
 }
 export declare const defaultConfiguration: Configuration;
+export declare function loadConfigurationEntry(key: string, configuration: {
+    [key: string]: any;
+}, defaults?: {
+    [key: string]: any;
+}): any;

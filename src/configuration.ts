@@ -40,6 +40,13 @@ export interface PluginOptions{
   sizeAnalyzerServer?: boolean;
 }
 
+export interface ServiceWorker{
+  source: string;
+  dest: string;
+  patterns: Array<string | RegExp>;
+  ignores: Array<string | RegExp>;
+}
+
 export interface Configuration{
   environment?: string;
   version?: string;
@@ -56,7 +63,7 @@ export interface Configuration{
   externals?: Array<string>;
   sourceMapsType?: webpack.Options.Devtool;
   server?: Server;
-  serviceWorkerEnabled?: boolean;
+  serviceWorker?: ServiceWorker | boolean;
 }
 
 export const defaultConfiguration: Configuration = {
@@ -102,5 +109,14 @@ export const defaultConfiguration: Configuration = {
     compress: true,
     hot: true
   },
-  serviceWorkerEnabled: true
+  serviceWorker: {
+    source: 'sw.js',
+    dest: 'sw.js',
+    patterns: ['**/*.{html,js,json,css}', 'images/favicon.png'],
+    ignores: ['sw.js', 'js/workbox.js']
+  }
 };
+
+export function loadConfigurationEntry(key: string, configuration: {[key: string]: any}, defaults: {[key: string]: any} = defaultConfiguration): any{
+  return configuration.hasOwnProperty(key) ? configuration[key] : defaults[key];
+}

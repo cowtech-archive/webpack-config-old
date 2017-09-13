@@ -1,3 +1,7 @@
+### 2017-09-13 / 0.7.0
+
+* Service Workers support.
+
 ### 2017-09-12 / 0.6.4
 
 * Correctly rebuild JS module.

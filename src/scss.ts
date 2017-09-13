@@ -1,7 +1,7 @@
 import {readFileSync} from 'fs';
 import * as sass from 'sass';
 
-import {Configuration, Scss, defaultConfiguration} from './configuration';
+import {Configuration, Scss, defaultConfiguration, loadConfigurationEntry} from './configuration';
 
 const postcssPlugins = function(toLoad: Array<any>, browsersWhiteList: Array<string>, selectorBlackList: Array<string | RegExp>): Array<any>{
   const plugins: Array<any> = [];
@@ -25,9 +25,9 @@ export function setupCssPipeline(configuration: Configuration){
   const options: Scss = configuration.scss || {};
   const defaultOptions: Scss = defaultConfiguration.scss;
 
-  const plugins: Array<any> = options.hasOwnProperty('plugins') ? options.plugins : defaultOptions.plugins;
-  const browsersWhiteList: Array<string> = options.hasOwnProperty('browsersWhiteList') ? options.browsersWhiteList : defaultOptions.browsersWhiteList;
-  const selectorBlackList: Array<string | RegExp> = options.hasOwnProperty('selectorBlackList') ? options.selectorBlackList : defaultOptions.selectorBlackList;
+  const plugins: Array<any> = loadConfigurationEntry('plugins', configuration);
+  const browsersWhiteList: Array<string> = loadConfigurationEntry('browsersWhiteList', options, defaultOptions);
+  const selectorBlackList: Array<string | RegExp> = loadConfigurationEntry('selectorBlackList', options, defaultOptions);
 
   const pipeline = [
     'css-loader',
@@ -35,7 +35,7 @@ export function setupCssPipeline(configuration: Configuration){
     {loader: 'sass-loader', options: {
       outputStyle: 'compressed',
       functions: {svg: (param: sass.Value) => new sass.types.String(`url('data:image/svg+xml;utf8,${readFileSync(param.getValue())}')`)},
-      includePaths: defaultConfiguration.scss.includePaths}
+      includePaths: defaultOptions.includePaths}
     }
   ];
 

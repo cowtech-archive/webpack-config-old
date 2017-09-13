@@ -1,8 +1,8 @@
-import {Configuration, Babel, defaultConfiguration} from './configuration';
+import {Configuration, Babel, loadConfigurationEntry} from './configuration';
 
 export function setupRules(configuration: Configuration, cssPipeline: any, version: string){
-  const babel: Babel = configuration.hasOwnProperty('babel') ? configuration.babel : defaultConfiguration.babel;
-  const transpilers: Array<string> = configuration.hasOwnProperty('transpilers') ? configuration.transpilers : defaultConfiguration.transpilers;
+  const babel: Babel = loadConfigurationEntry('babel', configuration);
+  const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
 
   const babelEnv = ['env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude}];
 
@@ -55,7 +55,7 @@ export function setupRules(configuration: Configuration, cssPipeline: any, versi
 }
 
 export function setupResolvers(configuration: Configuration): Array<string>{
-  const transpilers: Array<string> = configuration.hasOwnProperty('transpilers') ? configuration.transpilers : defaultConfiguration.transpilers;
+  const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
   const extensions = ['.json', '.js'];
 
   if(transpilers.includes('babel'))

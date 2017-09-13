@@ -51,17 +51,25 @@ const defaultConfiguration = {
         compress: true,
         hot: true
     },
-    serviceWorkerEnabled: true
+    serviceWorker: {
+        source: 'sw.js',
+        dest: 'sw.js',
+        patterns: ['**/*.{html,js,json,css}', 'images/favicon.png'],
+        ignores: ['sw.js', 'js/workbox.js']
+    }
 };
+function loadConfigurationEntry(key, configuration, defaults = defaultConfiguration) {
+    return configuration.hasOwnProperty(key) ? configuration[key] : defaults[key];
+}
 
 function loadEnvironment(configuration) {
     const packageInfo = require(path.resolve(process.cwd(), './package.json'));
-    const environment = configuration.hasOwnProperty('environment') ? configuration.environment : defaultConfiguration.environment;
-    const swe = configuration.hasOwnProperty('serviceWorkerEnabled') ? configuration.serviceWorkerEnabled : defaultConfiguration.serviceWorkerEnabled;
-    const version = configuration.hasOwnProperty('version') ? configuration.version : defaultConfiguration.version;
+    const environment = loadConfigurationEntry('environment', configuration);
+    const version = loadConfigurationEntry('version', configuration);
+    const sw = loadConfigurationEntry('serviceWorker', configuration);
     if (!packageInfo.site)
         packageInfo.site = {};
-    return Object.assign({ environment, serviceWorkerEnabled: swe, version: version || moment.utc().format('YYYYMMDD-HHmmss') }, (packageInfo.site.common || {}), (packageInfo.site[environment] || {}));
+    return Object.assign({ environment, serviceWorkerEnabled: sw !== false, version: version || moment.utc().format('YYYYMMDD-HHmmss') }, (packageInfo.site.common || {}), (packageInfo.site[environment] || {}));
 }
 
 const postcssPlugins = function (toLoad, browsersWhiteList, selectorBlackList) {
@@ -79,16 +87,16 @@ const postcssPlugins = function (toLoad, browsersWhiteList, selectorBlackList) {
 function setupCssPipeline(configuration) {
     const options = configuration.scss || {};
     const defaultOptions = defaultConfiguration.scss;
-    const plugins = options.hasOwnProperty('plugins') ? options.plugins : defaultOptions.plugins;
-    const browsersWhiteList = options.hasOwnProperty('browsersWhiteList') ? options.browsersWhiteList : defaultOptions.browsersWhiteList;
-    const selectorBlackList = options.hasOwnProperty('selectorBlackList') ? options.selectorBlackList : defaultOptions.selectorBlackList;
+    const plugins = loadConfigurationEntry('plugins', configuration);
+    const browsersWhiteList = loadConfigurationEntry('browsersWhiteList', options, defaultOptions);
+    const selectorBlackList = loadConfigurationEntry('selectorBlackList', options, defaultOptions);
     const pipeline = [
         'css-loader',
         { loader: 'postcss-loader', options: { plugins: () => postcssPlugins(plugins, browsersWhiteList, selectorBlackList) } },
         { loader: 'sass-loader', options: {
                 outputStyle: 'compressed',
                 functions: { svg: (param) => new sass.types.String(`url('data:image/svg+xml;utf8,${fs.readFileSync(param.getValue())}')`) },
-                includePaths: defaultConfiguration.scss.includePaths
+                includePaths: defaultOptions.includePaths
             }
         }
     ];
@@ -145,8 +153,8 @@ const materialLoader = function (toLoad, loaderConfiguration) {
 };
 function loadIcons(configuration) {
     let icons = null;
-    const toLoad = configuration.hasOwnProperty('icons') ? configuration.icons : defaultConfiguration.icons;
-    const rawIconsLoader = configuration.hasOwnProperty('iconsLoader') ? configuration.iconsLoader : defaultConfiguration.iconsLoader;
+    const toLoad = loadConfigurationEntry('icons', configuration);
+    const rawIconsLoader = loadConfigurationEntry('iconsLoader', configuration);
     const iconsLoader = typeof rawIconsLoader === 'string' ? { id: rawIconsLoader } : rawIconsLoader;
     switch (iconsLoader.id.toLowerCase()) {
         case 'fontawesome':
@@ -166,12 +174,12 @@ function setupPlugins(configuration, environment) {
     const env = configuration.environment;
     const options = configuration.pluginsOptions || {};
     const defaultOptions = defaultConfiguration.pluginsOptions;
-    const indexFile = configuration.hasOwnProperty('indexFile') ? configuration.indexFile : defaultConfiguration.indexFile;
-    const concatenate = options.hasOwnProperty('concatenate') ? options.concatenate : defaultOptions.concatenate;
-    const minify = options.hasOwnProperty('minify') ? options.minify : defaultOptions.minify;
-    const hotModuleReload = options.hasOwnProperty('hotModuleReload') ? options.hotModuleReload : defaultOptions.hotModuleReload;
-    const commonChunks = options.hasOwnProperty('commonChunks') ? options.commonChunks : defaultOptions.commonChunks;
-    const sizeAnalyzerServer = options.hasOwnProperty('sizeAnalyzerServer') ? options.sizeAnalyzerServer : defaultOptions.sizeAnalyzerServer;
+    const indexFile = loadConfigurationEntry('indexFile', configuration);
+    const concatenate = loadConfigurationEntry('concatenate', options, defaultOptions);
+    const minify = loadConfigurationEntry('minify', options, defaultOptions);
+    const hotModuleReload = loadConfigurationEntry('hotModuleReload', options, defaultOptions);
+    const commonChunks = loadConfigurationEntry('commonChunks', options, defaultOptions);
+    const sizeAnalyzerServer = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
     const plugins = [
         new webpack.DefinePlugin({
             'env': JSON.stringify(environment),
@@ -202,8 +210,8 @@ function setupPlugins(configuration, environment) {
 }
 
 function setupRules(configuration, cssPipeline, version) {
-    const babel = configuration.hasOwnProperty('babel') ? configuration.babel : defaultConfiguration.babel;
-    const transpilers = configuration.hasOwnProperty('transpilers') ? configuration.transpilers : defaultConfiguration.transpilers;
+    const babel = loadConfigurationEntry('babel', configuration);
+    const transpilers = loadConfigurationEntry('transpilers', configuration);
     const babelEnv = ['env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude }];
     const rules = [
         { test: /\.scss$/, use: cssPipeline },
@@ -250,7 +258,7 @@ function setupRules(configuration, cssPipeline, version) {
     return rules;
 }
 function setupResolvers(configuration) {
-    const transpilers = configuration.hasOwnProperty('transpilers') ? configuration.transpilers : defaultConfiguration.transpilers;
+    const transpilers = loadConfigurationEntry('transpilers', configuration);
     const extensions = ['.json', '.js'];
     if (transpilers.includes('babel'))
         extensions.push('.jsx');
@@ -259,16 +267,35 @@ function setupResolvers(configuration) {
     return extensions;
 }
 
+const WorkboxPlugin = require('workbox-webpack-plugin');
+function setupServiceWorker(config, configuration) {
+    const sw = loadConfigurationEntry('serviceWorker', configuration);
+    const distFolder = loadConfigurationEntry('distFolder', configuration);
+    const source = loadConfigurationEntry('source', sw, defaultConfiguration.serviceWorker);
+    const dest = loadConfigurationEntry('dest', sw, defaultConfiguration.serviceWorker);
+    const globPatterns = loadConfigurationEntry('patterns', sw, defaultConfiguration.serviceWorker);
+    const globIgnores = loadConfigurationEntry('ignores', sw, defaultConfiguration.serviceWorker);
+    if (sw === false)
+        return config;
+    config.entry['sw.js'] = './src/js/service-worker.ts';
+    config.module.rules.unshift({
+        test: /workbox-sw\.[a-z]+\..+\.js$/,
+        use: [{ loader: 'file-loader', options: { name: 'js/workbox.js' } }, { loader: 'babel-loader', options: { presets: ['minify', { comments: false }] } }]
+    });
+    config.plugins.push(new WorkboxPlugin({ swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores }));
+    return config;
+}
+
 function setupServer(configuration) {
     const server = configuration.server || {};
     const defaultServer = defaultConfiguration.server;
-    const https = server.hasOwnProperty('https') ? server.https : defaultServer.https;
+    const https = loadConfigurationEntry('https', server, defaultServer);
     const config = {
-        host: server.host || defaultServer.host,
-        port: server.port || defaultServer.port,
-        historyApiFallback: server.hasOwnProperty('historyApiFallback') ? server.historyApiFallback : defaultServer.historyApiFallback,
-        compress: server.hasOwnProperty('compress') ? server.compress : defaultServer.compress,
-        hot: server.hasOwnProperty('hot') ? server.hot : defaultServer.hot
+        host: loadConfigurationEntry('host', server, defaultServer),
+        port: loadConfigurationEntry('port', server, defaultServer),
+        historyApiFallback: loadConfigurationEntry('historyApiFallback', server, defaultServer),
+        compress: loadConfigurationEntry('compress', server, defaultServer),
+        hot: loadConfigurationEntry('hot', server, defaultServer)
     };
     if (https) {
         config.https = {
@@ -300,6 +327,8 @@ function setup(env, configuration, afterHook) {
         devtool: env === 'development' ? (configuration.sourceMapsType || defaultConfiguration.sourceMapsType) : false,
         devServer: Object.assign({ contentBase: destination }, setupServer(configuration))
     };
+    if (env === 'production')
+        config = setupServiceWorker(config, configuration);
     if (typeof afterHook === 'function')
         config = afterHook(config);
     return config;
@@ -308,6 +337,7 @@ function setup(env, configuration, afterHook) {
 exports.setupServer = setupServer;
 exports.setup = setup;
 exports.defaultConfiguration = defaultConfiguration;
+exports.loadConfigurationEntry = loadConfigurationEntry;
 exports.loadEnvironment = loadEnvironment;
 exports.loadIcons = loadIcons;
 exports.setupPlugins = setupPlugins;

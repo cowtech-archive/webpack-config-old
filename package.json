@@ -37,6 +37,7 @@
     "babel-loader": "~7.1",
     "babel-polyfill": "~6.26",
     "babel-preset-env": "~1.6",
+    "babel-preset-minify": "~0.2",    
     "babel-preset-react": "~6.24",
     "babili-webpack-plugin": "~0.1",
     "cheerio": "^1.0.0-rc.1",
@@ -62,7 +63,8 @@
     "typescript": "~2.5",
     "webpack": "~3.5",
     "webpack-bundle-analyzer": "~2.9",
-    "webpack-dev-server": "~2.7"
+    "webpack-dev-server": "~2.7",
+    "workbox-webpack-plugin": "~2.0"
   },
   "devDependencies": {
     "@cowtech/package-utils": "~0.2",
