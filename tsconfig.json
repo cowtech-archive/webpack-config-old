@@ -15,7 +15,7 @@
     "lib": ["dom", "es2017"],
     "baseUrl": ".",
     "paths": {
-      "sass": ["typings/sass"]
+      "node-sass": ["typings/node-sass"]
     },
     "declaration": true,
     "declarationDir": "types/"

@@ -1,5 +1,5 @@
 import {readFileSync} from 'fs';
-import * as sass from 'sass';
+import * as sass from 'node-sass';
 
 import {Configuration, Scss, defaultConfiguration, loadConfigurationEntry} from './configuration';
 
@@ -25,7 +25,7 @@ export function setupCssPipeline(configuration: Configuration){
   const options: Scss = configuration.scss || {};
   const defaultOptions: Scss = defaultConfiguration.scss;
 
-  const plugins: Array<any> = loadConfigurationEntry('plugins', configuration);
+  const plugins: Array<any> = loadConfigurationEntry('plugins', options, defaultOptions);
   const browsersWhiteList: Array<string> = loadConfigurationEntry('browsersWhiteList', options, defaultOptions);
   const selectorBlackList: Array<string | RegExp> = loadConfigurationEntry('selectorBlackList', options, defaultOptions);
 

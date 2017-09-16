@@ -1,4 +1,4 @@
-declare module 'sass'{
+declare module 'node-sass'{
   interface Value{
     getValue(): string;
   }

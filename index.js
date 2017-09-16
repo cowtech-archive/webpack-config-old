@@ -5,7 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var fs = require('fs');
 var path = require('path');
 var moment = require('moment');
-var sass = require('sass');
+var sass = require('node-sass');
 var webpack = require('webpack');
 var cheerio = require('cheerio');
 
@@ -88,7 +88,7 @@ const postcssPlugins = function (toLoad, browsersWhiteList, selectorBlackList) {
 function setupCssPipeline(configuration) {
     const options = configuration.scss || {};
     const defaultOptions = defaultConfiguration.scss;
-    const plugins = loadConfigurationEntry('plugins', configuration);
+    const plugins = loadConfigurationEntry('plugins', options, defaultOptions);
     const browsersWhiteList = loadConfigurationEntry('browsersWhiteList', options, defaultOptions);
     const selectorBlackList = loadConfigurationEntry('selectorBlackList', options, defaultOptions);
     const pipeline = [

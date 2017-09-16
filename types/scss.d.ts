@@ -1,4 +1,4 @@
-import * as sass from 'sass';
+import * as sass from 'node-sass';
 import { Configuration } from './configuration';
 export declare function setupCssPipeline(configuration: Configuration): (string | {
     loader: string;

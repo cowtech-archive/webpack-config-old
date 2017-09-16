@@ -1,3 +1,7 @@
+### 2017-09-16 / 0.7.3
+
+* SCSS fixes.
+
 ### 2017-09-16 / 0.7.2
 
 * Do not remove Sass require.

@@ -13,7 +13,7 @@ const fontAwesomeLoader = function(toLoad: Array<string>, loaderConfiguration?: 
     definitions: ''
   };
 
-  icons.tags = library('symbol[id^=icon-]').toArray().reduce((accu: {[key: string]: string}, dom: CheerioElement, index: number) => {
+  icons.tags = library('symbol[id^=icon-]').toArray().reduce<{[key: string]: string}>((accu: {[key: string]: string}, dom: CheerioElement, index: number) => {
     const icon: Cheerio = library(dom);
     const name = icon.attr('id').replace(/^icon-/g, '');
     const tag = `i${index}`;
@@ -40,7 +40,7 @@ const materialLoader = function(toLoad: Array<string>, loaderConfiguration?: Ico
     definitions: ''
   };
 
-  icons.tags = toLoad.reduce((accu: {[key: string]: string}, entry: string, index: number) => {
+  icons.tags = toLoad.reduce<{[key: string]: string}>((accu: {[key: string]: string}, entry: string, index: number) => {
     if(!entry.includes(':'))
       entry += ':action';
 
