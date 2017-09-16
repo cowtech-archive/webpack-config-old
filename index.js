@@ -106,7 +106,18 @@ function setupCssPipeline(configuration) {
     return pipeline;
 }
 
-const fontAwesomeLoader = function (toLoad, loaderConfiguration) {
+function loadSVGIcon(path$$1, tag) {
+    const icon = cheerio.load(fs.readFileSync(path$$1, 'utf-8'))('svg');
+    icon.attr('id', tag);
+    for (const attr of ['xmlns', 'width', 'height'])
+        icon.removeAttr(attr);
+    return icon;
+}
+function iconToString(icon) {
+    // Save the definition - as any is needed since .wrap is not in the type definitions yet
+    return icon.wrap('<div/>').parent().html().replace(/\n/mg, '').replace(/^\s+/mg, '');
+}
+function fontAwesomeLoader(toLoad, loaderConfiguration) {
     const library = cheerio.load(fs.readFileSync(path.resolve(process.cwd(), loaderConfiguration.fontAwesomePath), 'utf-8'));
     const icons = {
         prefix: loaderConfiguration.prefix,
@@ -119,16 +130,18 @@ const fontAwesomeLoader = function (toLoad, loaderConfiguration) {
         const tag = `i${index}`;
         icon.attr('id', tag);
         icon.find('title').remove();
+        for (const attr of ['xmlns', 'width', 'height'])
+            icon.removeAttr(attr);
         if (toLoad.includes(name)) {
             // Save the definition - as any is needed since .wrap is not in the type definitions yet
-            icons.definitions += icon.wrap('<div/>').parent().html().replace(/\n/mg, '').replace(/^\s+/mg, '');
+            icons.definitions += iconToString(icon);
             accu[name] = tag;
         }
         return accu;
     }, {});
     return icons;
-};
-const materialLoader = function (toLoad, loaderConfiguration) {
+}
+function materialLoader(toLoad, loaderConfiguration) {
     const icons = {
         prefix: loaderConfiguration.prefix,
         tags: {},
@@ -143,17 +156,12 @@ const materialLoader = function (toLoad, loaderConfiguration) {
         const tag = `i${index}`;
         const svgFile = path.resolve(process.cwd(), `node_modules/material-design-icons/${category}/svg/production/ic_${name.replace(/-/g, '_')}_48px.svg`);
         // Load the file and manipulate it
-        const icon = cheerio.load(fs.readFileSync(svgFile, 'utf-8'))('svg');
-        icon.attr('id', tag);
-        for (const attr of ['xmlns', 'width', 'height'])
-            icon.removeAttr(attr);
-        // Save the definition - as any is needed since .wrap is not in the type definitions yet
-        icons.definitions += icon.wrap('<div/>').parent().html().replace(/\n/mg, '').replace(/^\s+/mg, '');
+        icons.definitions += iconToString(loadSVGIcon(svgFile, tag));
         accu[name] = tag;
         return accu;
     }, {});
     return icons;
-};
+}
 function loadIcons(configuration) {
     let icons = null;
     const toLoad = loadConfigurationEntry('icons', configuration);
@@ -345,6 +353,10 @@ exports.setup = setup;
 exports.defaultConfiguration = defaultConfiguration;
 exports.loadConfigurationEntry = loadConfigurationEntry;
 exports.loadEnvironment = loadEnvironment;
+exports.loadSVGIcon = loadSVGIcon;
+exports.iconToString = iconToString;
+exports.fontAwesomeLoader = fontAwesomeLoader;
+exports.materialLoader = materialLoader;
 exports.loadIcons = loadIcons;
 exports.setupPlugins = setupPlugins;
 exports.setupRules = setupRules;

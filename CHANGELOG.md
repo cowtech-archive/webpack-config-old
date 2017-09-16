@@ -1,3 +1,7 @@
+### 2017-09-16 / 0.7.6
+
+* More icons loading helpers.
+
 ### 2017-09-16 / 0.7.5
 
 * Allow icons customization.
