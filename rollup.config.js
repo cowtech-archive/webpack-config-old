@@ -7,9 +7,7 @@ export default {
     format: 'cjs'
   },
   plugins: [
-    typescript({clean: true, cacheRoot: 'tmp/.rpt2_cache', tsconfig: 'tsconfig.json', useTsconfigDeclarationDir: true}),
-    // Workaround for external sass module
-    {transformBundle: code => ({code: code.replace("var sass = require('sass');\n", ''), map: {mappings: ''}})}
+    typescript({clean: true, cacheRoot: 'tmp/.rpt2_cache', tsconfig: 'tsconfig.json', useTsconfigDeclarationDir: true})
   ],
   external: [...Object.keys(require('./package.json').dependencies), 'fs', 'path', 'webpack', 'cheerio']
 };

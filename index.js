@@ -5,6 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var fs = require('fs');
 var path = require('path');
 var moment = require('moment');
+var sass = require('sass');
 var webpack = require('webpack');
 var cheerio = require('cheerio');
 

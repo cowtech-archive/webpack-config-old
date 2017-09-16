@@ -1,3 +1,7 @@
+### 2017-09-16 / 0.7.2
+
+* Do not remove Sass require.
+
 ### 2017-09-13 / 0.7.1
 
 * Correctly set Service Worker template file.
