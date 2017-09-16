@@ -167,6 +167,8 @@ function loadIcons(configuration) {
             icons = materialLoader(toLoad, iconsLoader);
             break;
     }
+    if (typeof iconsLoader.afterHook === 'function')
+        icons = iconsLoader.afterHook(icons);
     return icons;
 }
 

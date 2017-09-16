@@ -1,3 +1,7 @@
+### 2017-09-16 / 0.7.5
+
+* Allow icons customization.
+
 ### 2017-09-16 / 0.7.4
 
 * Allow icons customization.

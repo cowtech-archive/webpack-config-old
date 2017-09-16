@@ -89,5 +89,8 @@ export function loadIcons(configuration: Configuration): Icons{
       break;
   }
 
+  if(typeof iconsLoader.afterHook === 'function')
+    icons = iconsLoader.afterHook(icons);
+
   return icons;
 }
