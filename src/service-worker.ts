@@ -5,19 +5,20 @@ import {Configuration, ServiceWorker, defaultConfiguration, loadConfigurationEnt
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 export function setupServiceWorker(config: webpack.Configuration, configuration: Configuration): webpack.Configuration{
-  const sw: ServiceWorker | boolean = loadConfigurationEntry('serviceWorker', configuration);
+  const options: ServiceWorker | boolean = loadConfigurationEntry('serviceWorker', configuration);
   const distFolder: string = loadConfigurationEntry('distFolder', configuration);
 
-  const source: string = loadConfigurationEntry('source', sw as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
-  const dest: string = loadConfigurationEntry('dest', sw as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
-  const globPatterns: Array<string> = loadConfigurationEntry('patterns', sw as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
-  const globIgnores: Array<string> = loadConfigurationEntry('ignores', sw as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const source: string = loadConfigurationEntry('source', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const dest: string = loadConfigurationEntry('dest', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const globPatterns: Array<string> = loadConfigurationEntry('patterns', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const globIgnores: Array<string> = loadConfigurationEntry('ignores', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
+  const templatedUrls: Array<string> = loadConfigurationEntry('templatedUrls', options as ServiceWorker, defaultConfiguration.serviceWorker as ServiceWorker);
   const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
 
-  if(sw === false)
+  if(options === false)
     return config;
 
-  (config.entry as webpack.Entry)[dest] = (sw as ServiceWorker).template || `./src/js/service-worker.${transpilers.includes('typescript') ? 'ts' : 'js'}`;
+  (config.entry as webpack.Entry)[dest] = (options as ServiceWorker).template || `./src/js/service-worker.${transpilers.includes('typescript') ? 'ts' : 'js'}`;
   (config.module as webpack.NewModule).rules.unshift(
     {
       test: /workbox-sw\.[a-z]+\..+\.js$/,
@@ -25,7 +26,12 @@ export function setupServiceWorker(config: webpack.Configuration, configuration:
     }
   );
 
-  config.plugins.push(new WorkboxPlugin({swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores}));
+  let plugin: any = new WorkboxPlugin({swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls});
+
+  if(typeof (options as ServiceWorker).afterHook === 'function')
+    plugin = (options as ServiceWorker).afterHook(plugin);
+
+  config.plugins.push(plugin);
 
   return config;
 }

@@ -4,9 +4,9 @@ export function setupRules(configuration: Configuration, cssPipeline: any, versi
   const babel: Babel = loadConfigurationEntry('babel', configuration);
   const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
 
-  const babelEnv = ['env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude}];
+  const babelEnv: Array<any> = ['env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude}];
 
-  const rules: Array<any> = [
+  let rules: Array<any> = [
     {test: /\.scss$/, use: cssPipeline},
     {
       test: /\.(?:png|jpg|svg)$/,
@@ -51,12 +51,15 @@ export function setupRules(configuration: Configuration, cssPipeline: any, versi
     rules.unshift({test: /\.ts$/, loader: 'awesome-typescript-loader'});
   }
 
+  if(typeof configuration.afterRulesHook === 'function')
+    rules = configuration.afterRulesHook(rules);
+
   return rules;
 }
 
 export function setupResolvers(configuration: Configuration): Array<string>{
   const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
-  const extensions = ['.json', '.js'];
+  const extensions: Array<string> = ['.json', '.js'];
 
   if(transpilers.includes('babel'))
     extensions.push('.jsx');

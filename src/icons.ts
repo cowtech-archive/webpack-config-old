@@ -30,8 +30,8 @@ export function fontAwesomeLoader(toLoad: Array<string>, loaderConfiguration?: I
 
   icons.tags = library('symbol[id^=icon-]').toArray().reduce<{[key: string]: string}>((accu: {[key: string]: string}, dom: CheerioElement, index: number) => {
     const icon: Cheerio = library(dom);
-    const name = icon.attr('id').replace(/^icon-/g, '');
-    const tag = `i${index}`;
+    const name: string = icon.attr('id').replace(/^icon-/g, '');
+    const tag: string = `i${index}`;
 
     icon.attr('id', tag);
     icon.find('title').remove();
@@ -51,7 +51,7 @@ export function fontAwesomeLoader(toLoad: Array<string>, loaderConfiguration?: I
 }
 
 export function materialLoader(toLoad: Array<string>, loaderConfiguration?: IconsLoader): Icons{
-  const icons = {
+  const icons: Icons = {
     prefix: loaderConfiguration.prefix,
     tags: {},
     definitions: ''

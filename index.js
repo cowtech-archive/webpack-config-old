@@ -91,7 +91,7 @@ function setupCssPipeline(configuration) {
     const plugins = loadConfigurationEntry('plugins', options, defaultOptions);
     const browsersWhiteList = loadConfigurationEntry('browsersWhiteList', options, defaultOptions);
     const selectorBlackList = loadConfigurationEntry('selectorBlackList', options, defaultOptions);
-    const pipeline = [
+    let pipeline = [
         'css-loader',
         { loader: 'postcss-loader', options: { plugins: () => postcssPlugins(plugins, browsersWhiteList, selectorBlackList) } },
         { loader: 'sass-loader', options: {
@@ -103,6 +103,8 @@ function setupCssPipeline(configuration) {
     ];
     if (configuration.environment !== 'production')
         pipeline.unshift('style-loader');
+    if (typeof options.afterHook === 'function')
+        pipeline = options.afterHook(pipeline);
     return pipeline;
 }
 
@@ -193,7 +195,7 @@ function setupPlugins(configuration, environment) {
     const hotModuleReload = loadConfigurationEntry('hotModuleReload', options, defaultOptions);
     const commonChunks = loadConfigurationEntry('commonChunks', options, defaultOptions);
     const sizeAnalyzerServer = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
-    const plugins = [
+    let plugins = [
         new webpack.DefinePlugin({
             'env': JSON.stringify(environment),
             'version': JSON.stringify(environment.version),
@@ -219,6 +221,8 @@ function setupPlugins(configuration, environment) {
     }
     if (Array.isArray(configuration.plugins))
         plugins.push(...configuration.plugins);
+    if (typeof options.afterHook === 'function')
+        plugins = options.afterHook(plugins);
     return plugins;
 }
 
@@ -226,7 +230,7 @@ function setupRules(configuration, cssPipeline, version) {
     const babel = loadConfigurationEntry('babel', configuration);
     const transpilers = loadConfigurationEntry('transpilers', configuration);
     const babelEnv = ['env', { targets: { browsers: babel.browsersWhiteList }, exclude: babel.exclude }];
-    const rules = [
+    let rules = [
         { test: /\.scss$/, use: cssPipeline },
         {
             test: /\.(?:png|jpg|svg)$/,
@@ -268,6 +272,8 @@ function setupRules(configuration, cssPipeline, version) {
             rules.unshift({ test: /\.tsx$/, loader: 'awesome-typescript-loader' });
         rules.unshift({ test: /\.ts$/, loader: 'awesome-typescript-loader' });
     }
+    if (typeof configuration.afterRulesHook === 'function')
+        rules = configuration.afterRulesHook(rules);
     return rules;
 }
 function setupResolvers(configuration) {
@@ -282,21 +288,25 @@ function setupResolvers(configuration) {
 
 const WorkboxPlugin = require('workbox-webpack-plugin');
 function setupServiceWorker(config, configuration) {
-    const sw = loadConfigurationEntry('serviceWorker', configuration);
+    const options = loadConfigurationEntry('serviceWorker', configuration);
     const distFolder = loadConfigurationEntry('distFolder', configuration);
-    const source = loadConfigurationEntry('source', sw, defaultConfiguration.serviceWorker);
-    const dest = loadConfigurationEntry('dest', sw, defaultConfiguration.serviceWorker);
-    const globPatterns = loadConfigurationEntry('patterns', sw, defaultConfiguration.serviceWorker);
-    const globIgnores = loadConfigurationEntry('ignores', sw, defaultConfiguration.serviceWorker);
+    const source = loadConfigurationEntry('source', options, defaultConfiguration.serviceWorker);
+    const dest = loadConfigurationEntry('dest', options, defaultConfiguration.serviceWorker);
+    const globPatterns = loadConfigurationEntry('patterns', options, defaultConfiguration.serviceWorker);
+    const globIgnores = loadConfigurationEntry('ignores', options, defaultConfiguration.serviceWorker);
+    const templatedUrls = loadConfigurationEntry('templatedUrls', options, defaultConfiguration.serviceWorker);
     const transpilers = loadConfigurationEntry('transpilers', configuration);
-    if (sw === false)
+    if (options === false)
         return config;
-    config.entry[dest] = sw.template || `./src/js/service-worker.${transpilers.includes('typescript') ? 'ts' : 'js'}`;
+    config.entry[dest] = options.template || `./src/js/service-worker.${transpilers.includes('typescript') ? 'ts' : 'js'}`;
     config.module.rules.unshift({
         test: /workbox-sw\.[a-z]+\..+\.js$/,
         use: [{ loader: 'file-loader', options: { name: 'js/workbox.js' } }, { loader: 'babel-loader', options: { presets: ['minify', { comments: false }] } }]
     });
-    config.plugins.push(new WorkboxPlugin({ swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores }));
+    let plugin = new WorkboxPlugin({ swSrc: `${distFolder}/${source}`, swDest: `${distFolder}/${dest}`, globPatterns, globIgnores, templatedUrls });
+    if (typeof options.afterHook === 'function')
+        plugin = options.afterHook(plugin);
+    config.plugins.push(plugin);
     return config;
 }
 
@@ -304,7 +314,7 @@ function setupServer(configuration) {
     const server = configuration.server || {};
     const defaultServer = defaultConfiguration.server;
     const https = loadConfigurationEntry('https', server, defaultServer);
-    const config = {
+    let config = {
         host: loadConfigurationEntry('host', server, defaultServer),
         port: loadConfigurationEntry('port', server, defaultServer),
         historyApiFallback: loadConfigurationEntry('historyApiFallback', server, defaultServer),
@@ -317,6 +327,8 @@ function setupServer(configuration) {
             cert: https.cert || fs.readFileSync(path.resolve(process.cwd(), defaultServer.https.cert))
         };
     }
+    if (typeof server.afterHook === 'function')
+        config = server.afterHook(config);
     return config;
 }
 function setup(env, configuration, afterHook) {

@@ -20,7 +20,7 @@ export function setupPlugins(configuration: Configuration, environment: any): Ar
   const commonChunks: boolean = loadConfigurationEntry('commonChunks', options, defaultOptions);
   const sizeAnalyzerServer: boolean = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
 
-  const plugins: Array<any> = [
+  let plugins: Array<any> = [
     new webpack.DefinePlugin({
       'env': JSON.stringify(environment),
       'version': JSON.stringify(environment.version),
@@ -50,6 +50,9 @@ export function setupPlugins(configuration: Configuration, environment: any): Ar
 
   if(Array.isArray(configuration.plugins))
     plugins.push(...configuration.plugins);
+
+  if(typeof options.afterHook === 'function')
+    plugins = options.afterHook(plugins);
 
   return plugins;
 }

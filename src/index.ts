@@ -23,7 +23,7 @@ export function setupServer(configuration: Configuration): any{
   const defaultServer: Server = defaultConfiguration.server;
   const https: Https | boolean = loadConfigurationEntry('https', server, defaultServer);
 
-  const config: any = {
+  let config: any = {
     host: loadConfigurationEntry('host', server, defaultServer),
     port: loadConfigurationEntry('port', server, defaultServer),
     historyApiFallback: loadConfigurationEntry('historyApiFallback', server, defaultServer),
@@ -37,6 +37,9 @@ export function setupServer(configuration: Configuration): any{
       cert: (https as Https).cert || readFileSync(resolve(process.cwd(), (defaultServer.https as Https).cert))
     };
   }
+
+  if(typeof server.afterHook === 'function')
+    config = server.afterHook(config);
 
   return config;
 }

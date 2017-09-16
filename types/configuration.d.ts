@@ -17,6 +17,7 @@ export interface Scss {
     plugins?: Array<any>;
     browsersWhiteList?: Array<string>;
     selectorBlackList?: Array<string | RegExp>;
+    afterHook?(rules: Array<any>): Array<any>;
 }
 export interface Https {
     key: Buffer | string;
@@ -29,6 +30,7 @@ export interface Server {
     historyApiFallback?: boolean;
     compress?: boolean;
     hot?: boolean;
+    afterHook?(config: any): any;
 }
 export interface PluginOptions {
     concatenate?: boolean;
@@ -36,13 +38,18 @@ export interface PluginOptions {
     hotModuleReload?: boolean;
     commonChunks?: boolean;
     sizeAnalyzerServer?: boolean;
+    afterHook?(plugins: Array<any>): Array<any>;
 }
 export interface ServiceWorker {
     template?: string;
-    source: string;
-    dest: string;
-    patterns: Array<string | RegExp>;
-    ignores: Array<string | RegExp>;
+    source?: string;
+    dest?: string;
+    patterns?: Array<string | RegExp>;
+    ignores?: Array<string | RegExp>;
+    templatedUrls?: {
+        [key: string]: string | Array<string>;
+    };
+    afterHook?(plugin: any): any;
 }
 export interface Configuration {
     environment?: string;
@@ -63,6 +70,7 @@ export interface Configuration {
     sourceMapsType?: webpack.Options.Devtool;
     server?: Server;
     serviceWorker?: ServiceWorker | boolean;
+    afterRulesHook?(rules: Array<any>): Array<any>;
 }
 export declare const defaultConfiguration: Configuration;
 export declare function loadConfigurationEntry(key: string, configuration: {

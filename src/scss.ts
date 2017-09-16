@@ -21,7 +21,7 @@ const postcssPlugins = function(toLoad: Array<any>, browsersWhiteList: Array<str
   return plugins;
 };
 
-export function setupCssPipeline(configuration: Configuration){
+export function setupCssPipeline(configuration: Configuration): Array<any>{
   const options: Scss = configuration.scss || {};
   const defaultOptions: Scss = defaultConfiguration.scss;
 
@@ -29,7 +29,7 @@ export function setupCssPipeline(configuration: Configuration){
   const browsersWhiteList: Array<string> = loadConfigurationEntry('browsersWhiteList', options, defaultOptions);
   const selectorBlackList: Array<string | RegExp> = loadConfigurationEntry('selectorBlackList', options, defaultOptions);
 
-  const pipeline = [
+  let pipeline: Array<any> = [
     'css-loader',
     {loader: 'postcss-loader', options: {plugins: () => postcssPlugins(plugins, browsersWhiteList, selectorBlackList)}},
     {loader: 'sass-loader', options: {
@@ -41,6 +41,9 @@ export function setupCssPipeline(configuration: Configuration){
 
   if(configuration.environment !== 'production')
     pipeline.unshift('style-loader');
+
+  if(typeof options.afterHook === 'function')
+    pipeline = options.afterHook(pipeline);
 
   return pipeline;
 }
