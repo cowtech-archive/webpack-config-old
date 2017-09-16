@@ -7,7 +7,7 @@ import {Configuration, IconsLoader, loadConfigurationEntry} from './configuratio
 const fontAwesomeLoader = function(toLoad: Array<string>, loaderConfiguration?: IconsLoader): Icons{
   const library: CheerioStatic = cheerio.load(readFileSync(resolve(process.cwd(), loaderConfiguration.fontAwesomePath), 'utf-8'));
 
-  const icons = {
+  const icons: Icons = {
     prefix: loaderConfiguration.prefix,
     tags: {},
     definitions: ''
@@ -41,6 +41,9 @@ const materialLoader = function(toLoad: Array<string>, loaderConfiguration?: Ico
   };
 
   icons.tags = toLoad.reduce<{[key: string]: string}>((accu: {[key: string]: string}, entry: string, index: number) => {
+    if(entry.endsWith(':custom'))
+      return accu;
+
     if(!entry.includes(':'))
       entry += ':action';
 

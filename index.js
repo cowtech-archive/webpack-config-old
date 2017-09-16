@@ -135,6 +135,8 @@ const materialLoader = function (toLoad, loaderConfiguration) {
         definitions: ''
     };
     icons.tags = toLoad.reduce((accu, entry, index) => {
+        if (entry.endsWith(':custom'))
+            return accu;
         if (!entry.includes(':'))
             entry += ':action';
         const [name, category] = entry.split(':');

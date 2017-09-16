@@ -1,10 +1,12 @@
 /// <reference types="node" />
 /// <reference types="webpack" />
 import * as webpack from 'webpack';
+import { Icons } from './icons';
 export interface IconsLoader {
     id: string;
     prefix?: string;
     fontAwesomePath?: string;
+    afterHook?(icons: Icons): Icons;
 }
 export interface Babel {
     browsersWhiteList: Array<string>;
