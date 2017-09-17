@@ -110,7 +110,7 @@ function setupCssPipeline(configuration) {
 function loadSVGIcon(path$$1, tag) {
     const icon = cheerio.load(fs.readFileSync(path$$1, 'utf-8'))('svg');
     icon.attr('id', tag);
-    for (const attr of ['xmlns', 'width', 'height'])
+    for (const attr of ['width', 'height'])
         icon.removeAttr(attr);
     return icon;
 }
@@ -131,7 +131,7 @@ function fontAwesomeLoader(toLoad, loaderConfiguration) {
         const tag = `i${index}`;
         icon.attr('id', tag);
         icon.find('title').remove();
-        for (const attr of ['xmlns', 'width', 'height'])
+        for (const attr of ['width', 'height'])
             icon.removeAttr(attr);
         if (toLoad.includes(name)) {
             // Save the definition - as any is needed since .wrap is not in the type definitions yet

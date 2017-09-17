@@ -1,3 +1,7 @@
+### 2017-09-17 / 0.7.10
+
+* Minor icons fix.
+
 ### 2017-09-17 / 0.7.9
 
 * Allow material icons aliasing.

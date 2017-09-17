@@ -8,7 +8,7 @@ export function loadSVGIcon(path: string, tag: string): Cheerio{
   const icon: Cheerio = cheerio.load(readFileSync(path, 'utf-8'))('svg');
 
   icon.attr('id', tag);
-  for(const attr of ['xmlns', 'width', 'height'])
+  for(const attr of ['width', 'height'])
     icon.removeAttr(attr);
 
   return icon;
@@ -35,7 +35,7 @@ export function fontAwesomeLoader(toLoad: Array<string>, loaderConfiguration?: I
 
     icon.attr('id', tag);
     icon.find('title').remove();
-    for(const attr of ['xmlns', 'width', 'height'])
+    for(const attr of ['width', 'height'])
       icon.removeAttr(attr);
 
     if(toLoad.includes(name)){
