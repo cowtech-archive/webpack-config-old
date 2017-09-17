@@ -1,3 +1,7 @@
+### 2017-09-17 / 0.7.9
+
+* Allow material icons aliasing.
+
 ### 2017-09-17 / 0.7.8
 
 * Remove default version.

@@ -153,9 +153,10 @@ function materialLoader(toLoad, loaderConfiguration) {
             return accu;
         if (!entry.includes(':'))
             entry += ':action';
-        const [name, category] = entry.split(':');
+        const [rawName, category] = entry.split(':');
+        const [name, path$$1] = rawName.includes('@') ? rawName.split('@') : [rawName, rawName];
         const tag = `i${index}`;
-        const svgFile = path.resolve(process.cwd(), `node_modules/material-design-icons/${category}/svg/production/ic_${name.replace(/-/g, '_')}_48px.svg`);
+        const svgFile = path.resolve(process.cwd(), `node_modules/material-design-icons/${category}/svg/production/ic_${path$$1.replace(/-/g, '_')}_48px.svg`);
         // Load the file and manipulate it
         icons.definitions += iconToString(loadSVGIcon(svgFile, tag));
         accu[name] = tag;

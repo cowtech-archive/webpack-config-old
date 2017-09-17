@@ -64,9 +64,10 @@ export function materialLoader(toLoad: Array<string>, loaderConfiguration?: Icon
     if(!entry.includes(':'))
       entry += ':action';
 
-    const [name, category]: Array<string> = entry.split(':');
+    const [rawName, category]: Array<string> = entry.split(':');
+    const [name, path]: Array<string> = rawName.includes('@') ? rawName.split('@') : [rawName, rawName];
     const tag: string = `i${index}`;
-    const svgFile: string = resolve(process.cwd(), `node_modules/material-design-icons/${category}/svg/production/ic_${name.replace(/-/g, '_')}_48px.svg`);
+    const svgFile: string = resolve(process.cwd(), `node_modules/material-design-icons/${category}/svg/production/ic_${path.replace(/-/g, '_')}_48px.svg`);
 
     // Load the file and manipulate it
     icons.definitions += iconToString(loadSVGIcon(svgFile, tag));

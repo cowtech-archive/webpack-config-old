@@ -12,7 +12,7 @@
   "scripts": {
     "prebuild": "rm -f index.js *.d.ts types/*",
     "build": "rollup --environment production -c rollup.config.js",
-    "lint": "./node_modules/.bin/tslint --project tsconfig.json -t stylish --type-check",
+    "postbuild": "./node_modules/.bin/tslint --project tsconfig.json -t stylish --type-check",
     "postpublish": "git push origin && git push origin -f --tags"
   },
   "repository": {
