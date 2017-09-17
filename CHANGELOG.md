@@ -1,3 +1,7 @@
+### 2017-09-17 / 0.7.8
+
+* Remove default version.
+
 ### 2017-09-16 / 0.7.7
 
 * Add afterHooks everywhere.

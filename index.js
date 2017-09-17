@@ -10,7 +10,6 @@ var webpack = require('webpack');
 var cheerio = require('cheerio');
 
 const defaultConfiguration = {
-    version: '1.0',
     entries: [],
     distFolder: 'dist',
     transpilers: [],

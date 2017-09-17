@@ -76,7 +76,6 @@ export interface Configuration{
 }
 
 export const defaultConfiguration: Configuration = {
-  version: '1.0',
   entries: [],
   distFolder: 'dist',
   transpilers: [],
