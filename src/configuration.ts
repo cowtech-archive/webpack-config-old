@@ -121,7 +121,7 @@ export const defaultConfiguration: Configuration = {
     source: 'sw.js',
     dest: 'sw.js',
     patterns: ['**/*.{html,js,json,css}', 'images/favicon.png'],
-    ignores: ['sw.js', 'js/workbox.js']
+    ignores: ['manifest.json', 'sw.js', 'js/workbox.js']
   }
 };
 

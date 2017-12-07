@@ -1,3 +1,7 @@
+### 2017-12-07 / 0.8.0
+
+* Updated dependencies and ServiceWorkers handling.
+
 ### 2017-09-17 / 0.7.10
 
 * Minor icons fix.
