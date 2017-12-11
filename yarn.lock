@@ -16,8 +16,8 @@
     semver "~5.4"
 
 "@cowtech/tslint-config@~5.9":
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/@cowtech/tslint-config/-/tslint-config-5.9.0.tgz#aab5cac11cc017950f45d0c2ae15b0551dee8fff"
+  version "5.9.1"
+  resolved "https://registry.yarnpkg.com/@cowtech/tslint-config/-/tslint-config-5.9.1.tgz#4a34298cde463e04922125e6a877a651c2876529"
   dependencies:
     tslint "~5.8"
 

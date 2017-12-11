@@ -197,9 +197,9 @@ function setupPlugins(configuration, environment) {
     const sizeAnalyzerServer = loadConfigurationEntry('sizeAnalyzerServer', options, defaultOptions);
     let plugins = [
         new webpack.DefinePlugin({
-            'env': JSON.stringify(environment),
-            'version': JSON.stringify(environment.version),
-            'ICONS': JSON.stringify(loadIcons(configuration)),
+            env: JSON.stringify(environment),
+            version: JSON.stringify(environment.version),
+            ICONS: JSON.stringify(loadIcons(configuration)),
             'process.env': { NODE_ENV: JSON.stringify(env) } // This is needed by React for production mode
         })
     ];

@@ -1,3 +1,7 @@
+### 2017-12-11 / 0.8.1
+
+* Updated dependencies.
+
 ### 2017-12-07 / 0.8.0
 
 * Updated dependencies and ServiceWorkers handling.
