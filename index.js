@@ -226,6 +226,15 @@ function setupPlugins(configuration, environment) {
     return plugins;
 }
 
+function normalizeIncludePath(path$$1) {
+    const components = path$$1.split(path.sep);
+    if (components[0] === 'src')
+        components.shift();
+    else if (components[0] === 'node_modules') {
+        components.splice(0, components[1][0] === '@' ? 3 : 2); // Remove the folder, the scope (if present) and the package
+    }
+    return components.join(path.sep);
+}
 function setupRules(configuration, cssPipeline, version) {
     const babel = loadConfigurationEntry('babel', configuration);
     const transpilers = loadConfigurationEntry('transpilers', configuration);
@@ -234,12 +243,7 @@ function setupRules(configuration, cssPipeline, version) {
         { test: /\.scss$/, use: cssPipeline },
         {
             test: /\.(?:png|jpg|svg)$/,
-            use: [
-                {
-                    loader: 'file-loader',
-                    options: { name: '[path][name].[ext]', outputPath: (p) => `${p.replace('src/', '')}`, publicPath: (p) => `/${p.replace('src/', '')}` }
-                }
-            ]
+            use: [{ loader: 'file-loader', options: { name: '[path][name].[ext]', outputPath: normalizeIncludePath, publicPath: normalizeIncludePath } }]
         },
         {
             test: /manifest\.json$/,
@@ -371,6 +375,7 @@ exports.fontAwesomeLoader = fontAwesomeLoader;
 exports.materialLoader = materialLoader;
 exports.loadIcons = loadIcons;
 exports.setupPlugins = setupPlugins;
+exports.normalizeIncludePath = normalizeIncludePath;
 exports.setupRules = setupRules;
 exports.setupResolvers = setupResolvers;
 exports.setupCssPipeline = setupCssPipeline;

@@ -1,5 +1,5 @@
-import {resolve} from 'path';
 import * as moment from 'moment';
+import {resolve} from 'path';
 
 import {Configuration, loadConfigurationEntry} from './configuration';
 

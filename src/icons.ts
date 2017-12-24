@@ -1,6 +1,6 @@
+import * as cheerio from 'cheerio';
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as cheerio from 'cheerio';
 
 import {Configuration, IconsLoader, loadConfigurationEntry} from './configuration';
 

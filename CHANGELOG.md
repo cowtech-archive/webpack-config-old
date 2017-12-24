@@ -1,3 +1,7 @@
+### 2017-12-24 / 0.8.2
+
+* Fixed included images from node_modules.
+
 ### 2017-12-11 / 0.8.1
 
 * Updated dependencies.

@@ -1,4 +1,18 @@
+import {sep as pathSep} from 'path';
+
 import {Configuration, Babel, loadConfigurationEntry} from './configuration';
+
+export function normalizeIncludePath(path: string): string{
+  const components: Array<string> = path.split(pathSep);
+
+  if(components[0] === 'src')
+      components.shift();
+  else if(components[0] === 'node_modules'){
+      components.splice(0, components[1][0] === '@' ? 3 : 2); // Remove the folder, the scope (if present) and the package
+  }
+
+  return components.join(pathSep);
+}
 
 export function setupRules(configuration: Configuration, cssPipeline: any, version: string){
   const babel: Babel = loadConfigurationEntry('babel', configuration);
@@ -10,12 +24,7 @@ export function setupRules(configuration: Configuration, cssPipeline: any, versi
     {test: /\.scss$/, use: cssPipeline},
     {
       test: /\.(?:png|jpg|svg)$/,
-      use: [
-        {
-          loader: 'file-loader',
-          options: {name: '[path][name].[ext]', outputPath: (p: string) => `${p.replace('src/', '')}`, publicPath: (p: string) => `/${p.replace('src/', '')}`}
-        }
-      ]
+      use: [{loader: 'file-loader', options: {name: '[path][name].[ext]', outputPath: normalizeIncludePath, publicPath: normalizeIncludePath}}]
     },
     {
       test: /manifest\.json$/,
