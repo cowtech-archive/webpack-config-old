@@ -1,6 +1,6 @@
 {
   "name": "@cowtech/webpack-config",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "CowTech WebPack configuration.",
   "main": "index.js",
   "files": [
