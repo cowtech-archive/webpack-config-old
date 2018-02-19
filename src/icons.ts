@@ -5,7 +5,7 @@ import {resolve} from 'path';
 import {Configuration, IconsLoader, loadConfigurationEntry} from './configuration';
 
 export function loadSVGIcon(path: string, tag: string): Cheerio{
-  const icon: Cheerio = cheerio.load(readFileSync(path, 'utf-8'))('svg');
+  const icon = cheerio.load(readFileSync(path, 'utf-8'))('svg');
 
   icon.attr('id', tag);
   for(const attr of ['width', 'height'])
@@ -20,7 +20,7 @@ export function iconToString(icon: Cheerio): string{
 }
 
 export function fontAwesomeLoader(toLoad: Array<string>, loaderConfiguration?: IconsLoader): Icons{
-  const library: CheerioStatic = cheerio.load(readFileSync(resolve(process.cwd(), loaderConfiguration.fontAwesomePath), 'utf-8'));
+  const library = cheerio.load(readFileSync(resolve(process.cwd(), loaderConfiguration.fontAwesomePath), 'utf-8'));
 
   const icons: Icons = {
     prefix: loaderConfiguration.prefix,
@@ -28,10 +28,10 @@ export function fontAwesomeLoader(toLoad: Array<string>, loaderConfiguration?: I
     definitions: ''
   };
 
-  icons.tags = library('symbol[id^=icon-]').toArray().reduce<{[key: string]: string}>((accu: {[key: string]: string}, dom: CheerioElement, index: number) => {
-    const icon: Cheerio = library(dom);
-    const name: string = icon.attr('id').replace(/^icon-/g, '');
-    const tag: string = `i${index}`;
+  icons.tags = library('symbol[id^=icon-]').toArray().reduce<{[key: string]: string}>((accu, dom, index) => {
+    const icon = library(dom);
+    const name = icon.attr('id').replace(/^icon-/g, '');
+    const tag = `i${index}`;
 
     icon.attr('id', tag);
     icon.find('title').remove();
@@ -57,17 +57,17 @@ export function materialLoader(toLoad: Array<string>, loaderConfiguration?: Icon
     definitions: ''
   };
 
-  icons.tags = toLoad.reduce<{[key: string]: string}>((accu: {[key: string]: string}, entry: string, index: number) => {
+  icons.tags = toLoad.reduce<{[key: string]: string}>((accu, entry, index) => {
     if(entry.endsWith(':custom'))
       return accu;
 
     if(!entry.includes(':'))
       entry += ':action';
 
-    const [rawName, category]: Array<string> = entry.split(':');
-    const [name, path]: Array<string> = rawName.includes('@') ? rawName.split('@') : [rawName, rawName];
-    const tag: string = `i${index}`;
-    const svgFile: string = resolve(process.cwd(), `node_modules/material-design-icons/${category}/svg/production/ic_${path.replace(/-/g, '_')}_48px.svg`);
+    const [rawName, category] = entry.split(':');
+    const [name, path] = rawName.includes('@') ? rawName.split('@') : [rawName, rawName];
+    const tag = `i${index}`;
+    const svgFile = resolve(process.cwd(), `node_modules/material-design-icons/${category}/svg/production/ic_${path.replace(/-/g, '_')}_48px.svg`);
 
     // Load the file and manipulate it
     icons.definitions += iconToString(loadSVGIcon(svgFile, tag));
@@ -88,9 +88,9 @@ export interface Icons{
 export function loadIcons(configuration: Configuration): Icons{
   let icons: Icons = null;
 
-  const toLoad: Array<string> = loadConfigurationEntry('icons', configuration);
-  const rawIconsLoader: string | IconsLoader = loadConfigurationEntry('iconsLoader', configuration);
-  const iconsLoader: IconsLoader = typeof rawIconsLoader === 'string' ? {id: rawIconsLoader} : rawIconsLoader;
+  const toLoad = loadConfigurationEntry<Array<string>>('icons', configuration);
+  const rawIconsLoader = loadConfigurationEntry<string | IconsLoader>('iconsLoader', configuration);
+  const iconsLoader = typeof rawIconsLoader === 'string' ? {id: rawIconsLoader} : rawIconsLoader;
 
   switch(iconsLoader.id.toLowerCase()){
     case 'fontawesome':

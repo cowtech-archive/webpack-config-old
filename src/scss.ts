@@ -1,7 +1,7 @@
 import {readFileSync} from 'fs';
 import * as sass from 'node-sass';
 
-import {Configuration, Scss, defaultConfiguration, loadConfigurationEntry} from './configuration';
+import {Configuration, defaultConfiguration, loadConfigurationEntry} from './configuration';
 
 const postcssPlugins = function(toLoad: Array<any>, browsersWhiteList: Array<string>, selectorBlackList: Array<string | RegExp>): Array<any>{
   const plugins: Array<any> = [];
@@ -15,19 +15,19 @@ const postcssPlugins = function(toLoad: Array<any>, browsersWhiteList: Array<str
   if(toLoad.includes('discard-comments'))
     plugins.push(require('postcss-discard-comments')({removeAll: true}));
 
-  for(const additional of toLoad.filter((a: any) => a && typeof a !== 'string'))
+  for(const additional of toLoad.filter(a => a && typeof a !== 'string'))
     plugins.push(additional);
 
   return plugins;
 };
 
 export function setupCssPipeline(configuration: Configuration): Array<any>{
-  const options: Scss = configuration.scss || {};
-  const defaultOptions: Scss = defaultConfiguration.scss;
+  const options = configuration.scss || {};
+  const defaultOptions = defaultConfiguration.scss;
 
-  const plugins: Array<any> = loadConfigurationEntry('plugins', options, defaultOptions);
-  const browsersWhiteList: Array<string> = loadConfigurationEntry('browsersWhiteList', options, defaultOptions);
-  const selectorBlackList: Array<string | RegExp> = loadConfigurationEntry('selectorBlackList', options, defaultOptions);
+  const plugins = loadConfigurationEntry<Array<any>>('plugins', options, defaultOptions);
+  const browsersWhiteList = loadConfigurationEntry<Array<any>>('browsersWhiteList', options, defaultOptions);
+  const selectorBlackList = loadConfigurationEntry<Array<string | RegExp>>('selectorBlackList', options, defaultOptions);
 
   let pipeline: Array<any> = [
     'css-loader',

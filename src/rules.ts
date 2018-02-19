@@ -3,7 +3,7 @@ import {sep as pathSep} from 'path';
 import {Configuration, Babel, loadConfigurationEntry} from './configuration';
 
 export function normalizeIncludePath(path: string): string{
-  const components: Array<string> = path.split(pathSep);
+  const components = path.split(pathSep);
 
   if(components[0] === 'src')
       components.shift();
@@ -15,10 +15,10 @@ export function normalizeIncludePath(path: string): string{
 }
 
 export function setupRules(configuration: Configuration, cssPipeline: any, version: string){
-  const babel: Babel = loadConfigurationEntry('babel', configuration);
-  const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
+  const babel = loadConfigurationEntry<Babel>('babel', configuration);
+  const transpilers = loadConfigurationEntry<Array<string>>('transpilers', configuration);
 
-  const babelEnv: Array<any> = ['env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude}];
+  const babelEnv = ['env', {targets: {browsers: babel.browsersWhiteList}, exclude: babel.exclude}];
 
   let rules: Array<any> = [
     {test: /\.scss$/, use: cssPipeline},
@@ -67,8 +67,8 @@ export function setupRules(configuration: Configuration, cssPipeline: any, versi
 }
 
 export function setupResolvers(configuration: Configuration): Array<string>{
-  const transpilers: Array<string> = loadConfigurationEntry('transpilers', configuration);
-  const extensions: Array<string> = ['.json', '.js'];
+  const transpilers = loadConfigurationEntry<Array<string>>('transpilers', configuration);
+  const extensions = ['.json', '.js'];
 
   if(transpilers.includes('babel'))
     extensions.push('.jsx');

@@ -80,7 +80,7 @@ const postcssPlugins = function (toLoad, browsersWhiteList, selectorBlackList) {
         plugins.push(require('postcss-cssnext')({ browsers: browsersWhiteList || defaultConfiguration.scss.browsersWhiteList, cascade: false }));
     if (toLoad.includes('discard-comments'))
         plugins.push(require('postcss-discard-comments')({ removeAll: true }));
-    for (const additional of toLoad.filter((a) => a && typeof a !== 'string'))
+    for (const additional of toLoad.filter(a => a && typeof a !== 'string'))
         plugins.push(additional);
     return plugins;
 };

@@ -1,3 +1,7 @@
+### 2018-02-19 / 0.8.3
+
+* Simplified code.
+
 ### 2017-12-24 / 0.8.2
 
 * Fixed included images from node_modules.
