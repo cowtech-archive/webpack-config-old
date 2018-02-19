@@ -1,3 +1,7 @@
+# DEPRECATED
+
+## Please use: https://github.com/cowtech/webpack-config-lite
+
 # @cowtech/webpack-config
 
 [![Package Version](https://img.shields.io/npm/v/@cowtech/webpack-config.svg)](https://npmjs.com/package/@cowtech/webpack-config)
