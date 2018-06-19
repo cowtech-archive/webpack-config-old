@@ -1,6 +1,6 @@
 # DEPRECATED
 
-## Please use: https://github.com/cowtech/webpack-config-lite
+## Please use: https://github.com/cowtech/webpack-config
 
 # @cowtech/webpack-config
 
