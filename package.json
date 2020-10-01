@@ -48,7 +48,7 @@
     "html-webpack-exclude-assets-plugin": "~0.0",
     "html-webpack-plugin": "~2.30",
     "moment": "~2.19",
-    "node-sass": "~4.7",
+    "node-sass": "~4.13",
     "postcss-cssnext": "~3.0",
     "postcss-discard-comments": "~2.0",
     "postcss-loader": "~2.0",
